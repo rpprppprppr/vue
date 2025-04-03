@@ -51,7 +51,7 @@
     box-sizing: border-box;
     display: flex;
     justify-content: space-between;
-    background: #222;
+    background: #222224;
     z-index: 1000;
   }
 

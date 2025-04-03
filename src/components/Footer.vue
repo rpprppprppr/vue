@@ -6,15 +6,63 @@
 </script>
 
 <template>
-  <footer style="background-color: #222224; color: white; text-align: center; padding: 15px 0; width: 1600px; height: 80px; position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);">
-      <p style="margin: 0;">&copy; 2021 Brand All Rights Reserved.</p>
-      <div style="margin-top: 10px;">
-          <a href="#" style="margin: 0 5px;"><img :src="facebookIcon" alt="Facebook" width="24"></a>
-          <a href="#" style="margin: 0 5px;"><img :src="instagramIcon" alt="Instagram" width="24"></a>
-          <a href="#" style="margin: 0 5px;"><img :src="pinterestIcon" alt="Pinterest" width="24"></a>
-          <a href="#" style="margin: 0 5px;"><img :src="twitterIcon" alt="Twitter" width="24"></a>
+  <footer class="footer">
+      <div class="left">&copy; 2021 Brand All Rights Reserved.</div>
+      <div class="right">
+          <a href="#" class="footer__icon"><img :src="facebookIcon" alt="Facebook" height="16"></a>
+          <a href="#" class="footer__icon"><img :src="instagramIcon" alt="Instagram" height="16"></a>
+          <a href="#" class="footer__icon"><img :src="pinterestIcon" alt="Pinterest" height="16"></a>
+          <a href="#" class="footer__icon"><img :src="twitterIcon" alt="Twitter" height="16"></a>
       </div>
   </footer>
 </template>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+  .footer {
+    margin-top: auto;
+    padding: 24px 230px;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: space-between;
+    background: #222224;
+    color: white;
+  }
+
+  .left {
+    color: #fbfbfb;
+  }
+
+  .right {
+    display: flex;
+    gap: 8px;
+  }
+
+  .footer__icon {
+    background-color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+  }
+
+  @media screen and (max-width: 1599px) {
+    .footer {
+      padding: 24px 32px;
+    }
+  }
+
+  @media screen and (max-width: 767px) {
+    .footer {
+      display: flex;
+      flex-direction: column-reverse;
+      justify-content: center;
+      padding: 40px 62px 10px;
+      gap: 40px;
+    }
+
+    .right {
+      justify-content: center;
+    }
+  }
+</style>
