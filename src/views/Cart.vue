@@ -1,5 +1,5 @@
 <script setup>
-import SecondaryLayout from "@/layouts/Secondary.vue";
+  import SecondaryLayout from "@/layouts/Secondary.vue";
 </script>
 
 <template>

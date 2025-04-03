@@ -1,5 +1,5 @@
 <script setup>
-import SecondaryLayout from "@/layouts/Secondary.vue";
+  import SecondaryLayout from "@/layouts/Secondary.vue";
 </script>
 
 <template>
@@ -7,4 +7,5 @@ import SecondaryLayout from "@/layouts/Secondary.vue";
     <h1>Catalog</h1>
   </SecondaryLayout>
 </template>
+
 <style scoped lang="scss"></style>

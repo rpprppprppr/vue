@@ -1,8 +1,8 @@
 <script setup>
-import facebookIcon from "@/assets/icons/facebook-icon.svg";
-import instagramIcon from "@/assets/icons/instagram-icon.svg";
-import pinterestIcon from "@/assets/icons/pinterest-icon.svg";
-import twitterIcon from "@/assets/icons/twitter-icon.svg";
+  import facebookIcon from "@/assets/icons/facebook-icon.svg";
+  import instagramIcon from "@/assets/icons/instagram-icon.svg";
+  import pinterestIcon from "@/assets/icons/pinterest-icon.svg";
+  import twitterIcon from "@/assets/icons/twitter-icon.svg";
 </script>
 
 <template>
@@ -17,7 +17,4 @@ import twitterIcon from "@/assets/icons/twitter-icon.svg";
   </footer>
 </template>
 
-<style scoped lang="scss">
-/* Вы можете добавить дополнительные стили здесь */
-</style>
-
+<style scoped lang="scss"></style>

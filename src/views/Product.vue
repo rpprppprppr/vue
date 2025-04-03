@@ -1,5 +1,5 @@
 <script setup>
-import SecondaryLayout from "@/layouts/Secondary.vue";
+  import SecondaryLayout from "@/layouts/Secondary.vue";
 </script>
 
 <template>
@@ -8,8 +8,4 @@ import SecondaryLayout from "@/layouts/Secondary.vue";
   </SecondaryLayout>
 </template>
 
-<style scoped lang="scss">
-.h1 {
-  color: red;
-}
-</style>
+<style scoped lang="scss"></style>

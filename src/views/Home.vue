@@ -1,5 +1,5 @@
 <script setup>
-import DefaultLayout from "@/layouts/Default.vue";
+  import DefaultLayout from "@/layouts/Default.vue";
 </script>
 
 <template>
@@ -9,7 +9,7 @@ import DefaultLayout from "@/layouts/Default.vue";
 </template>
 
 <style scoped lang="scss">
-.h1 {
-  color: red;
-}
+  .h1 {
+    color: red;
+  }
 </style>
