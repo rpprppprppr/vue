@@ -58,6 +58,7 @@
   .header__icon {
     height: 30px;
     width: fit-content;
+    cursor: pointer;
   }
 
   .left, .right {
