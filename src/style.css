@@ -40,6 +40,13 @@
   font-weight: 400;
 }
 
+@font-face {
+  font-family: "Lato Black";
+  src: local('Lato Black'), url("/assets/fonts/Lato-Black.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 900;
+}
+
 :root {
   font-family: Lato, sans-serif;
   line-height: 1.5;
