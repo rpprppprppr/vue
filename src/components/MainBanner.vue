@@ -9,7 +9,7 @@
     </div>
     <div class="right">
       <div class="main-banner__text"> 
-        <span class="text-brand">THE BRAND</span><br> OF LUXERIOUS <span style="color: #F16D7F;">FASHION</span> 
+        <span class="text-brand">THE BRAND</span><br> OF LUXURIOUS <span style="color: #F16D7F;">FASHION</span> 
       </div>
     </div>
   </div>
