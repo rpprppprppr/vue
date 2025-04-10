@@ -1,33 +1,55 @@
 <script setup>
-  import MainBanner from "@/components/MainBanner.vue";
-  import Feature from "@/components/Feature.vue";
-  import DefaultLayout from "@/layouts/Default.vue";
-  import WOMEN from "@/assets/img/offer-1.png";
-  import MEN from "@/assets/img/offer-2.png";
-  import KIDS from "@/assets/img/offer-3.png";
-  import ACCESSORIES from "@/assets/img/offer-4.png";
+import MainBanner from "@/components/MainBanner.vue";
+import Feature from "@/components/Feature.vue";
+import DefaultLayout from "@/layouts/Default.vue";
+import WOMEN from "@/assets/img/offer-1.png";
+import MEN from "@/assets/img/offer-2.png";
+import KIDS from "@/assets/img/offer-3.png";
+import ACCESSORIES from "@/assets/img/offer-4.png";
+
+const offers = [
+  {
+    image: WOMEN,
+    alt: "Для женщин",
+    line1: "30% OFF",
+    line2: "FOR WOMEN",
+  },
+  {
+    image: MEN,
+    alt: "Для мужчин",
+    line1: "HOT DEAL",
+    line2: "FOR MEN",
+  },
+  {
+    image: KIDS,
+    alt: "Для детей",
+    line1: "NEW ARRIVALS",
+    line2: "FOR KIDS",
+  },
+  {
+    image: ACCESSORIES,
+    alt: "Акксесуары",
+    line1: "LUXURIOUS & TRENDY",
+    line2: "ACCESSORIES",
+  },
+];
 </script>
 
 <template>
   <DefaultLayout>
     <MainBanner />
     <div class="offer">
-      <div class="offer__block">
-        <img class="block__photo" :src="WOMEN" alt="Для женщин">
-        <div class="block__text">30% OFF <br> <span>FOR WOMEN</span></div>
-      </div> 
-      <div class="offer__block">
-        <img class="block__photo" :src="MEN" alt="Для мужчин">
-        <div class="block__text">HOT DEAL <br> <span>FOR MEN</span></div>
-      </div> 
-      <div class="offer__block">
-        <img class="block__photo" :src="KIDS" alt="Для детей">
-        <div class="block__text">NEW ARRIVALS <br> <span>FOR KIDS</span></div>
-      </div> 
-      <div class="offer__block">
-        <img class="block__photo" :src="ACCESSORIES" alt="Акксесуары">
-        <div class="block__text">LUXURIOUS & TRENDY <br> <span>ACCESSORIES</span></div>
-      </div> 
+      <div
+        class="offer__block"
+        v-for="(offer, index) in offers"
+        :key="index"
+      >
+        <img class="block__photo" :src="offer.image" :alt="offer.alt" />
+        <div class="block__text">
+          {{ offer.line1 }} <br />
+          <span>{{ offer.line2 }}</span>
+        </div>
+      </div>
     </div>
     <Feature />
   </DefaultLayout>

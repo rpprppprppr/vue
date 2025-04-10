@@ -1,25 +1,42 @@
 <script setup>
-  import deliveryIcon from "@/assets/icons/delivery.svg";
-  import saleIcon from "@/assets/icons/sale.svg";
-  import qualityIcon from "@/assets/icons/quality.svg";
+import deliveryIcon from "@/assets/icons/delivery.svg";
+import saleIcon from "@/assets/icons/sale.svg";
+import qualityIcon from "@/assets/icons/quality.svg";
+
+const sharedText =
+  "Worldwide delivery on all. Authorit tively morph next-generation innovation with extensive models.";
+
+const features = [
+  {
+    icon: deliveryIcon,
+    alt: "Доставка",
+    width: 45,
+    title: "Free Delivery",
+    text: sharedText,
+  },
+  {
+    icon: saleIcon,
+    alt: "Скидки",
+    width: 40,
+    title: "Sales & discounts",
+    text: sharedText,
+  },
+  {
+    icon: qualityIcon,
+    alt: "Качество",
+    width: 47,
+    title: "Quality assurance",
+    text: sharedText,
+  },
+];
 </script>
 
 <template>
   <div class="feature">
-    <div class="feature__block">
-      <img :src="deliveryIcon" alt="Доставка" width="45" />
-      <div class="block__title">Free Delivery</div>
-      <div class="block__text">Worldwide delivery on all. Authorit tively morph next-generation innov tion with extensive models.</div>
-    </div>
-    <div class="feature__block">
-      <img :src="saleIcon" alt="Скидки" width="40" />
-      <div class="block__title">Sales & discounts</div>
-      <div class="block__text">Worldwide delivery on all. Authorit tively morph next-generation innov tion with extensive models.</div>
-    </div>
-    <div class="feature__block">
-      <img :src="qualityIcon" alt="Качество" width="47" />
-      <div class="block__title">Quality assurance</div>
-      <div class="block__text">Worldwide delivery on all. Authorit tively morph next-generation innov tion with extensive models.</div>
+    <div class="feature__block" v-for="(feature, index) in features" :key="index">
+      <img :src="feature.icon" :alt="feature.alt" :width="feature.width" />
+      <div class="block__title">{{ feature.title }}</div>
+      <div class="block__text">{{ feature.text }}</div>
     </div>
   </div>
 </template>
