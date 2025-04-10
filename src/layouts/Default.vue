@@ -5,12 +5,10 @@
 </script>
 
 <template>
-  <div>
-    <Header />
-    <slot />
-    <Subscribe />
-    <Footer />
-  </div>
+  <Header />
+  <slot />
+  <Subscribe />
+  <Footer />
 </template>
 
 <style scoped lang="scss"></style>
