@@ -1,11 +1,7 @@
-<script setup>
-  import photo from "@/assets/img/subscribe-photo.png";
-</script>
-
 <template>
   <div class="subscribe">
     <div class="left">
-      <img class="subscribe__photo" :src="photo" alt="Аватар">
+      <img class="subscribe__photo" src="/src/assets/img/subscribe-photo.png" alt="Аватар">
       <div class="subscribe__quote">
         “Vestibulum quis porttitor dui! Quisque viverra nunc mi, <span style="font-style: italic;">a pulvinar purus condimentum</span>“
       </div>

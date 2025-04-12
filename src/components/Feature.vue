@@ -1,34 +1,15 @@
 <script setup>
-import deliveryIcon from "@/assets/icons/delivery.svg";
-import saleIcon from "@/assets/icons/sale.svg";
-import qualityIcon from "@/assets/icons/quality.svg";
+  import deliveryIcon from "@/assets/icons/delivery.svg";
+  import saleIcon from "@/assets/icons/sale.svg";
+  import qualityIcon from "@/assets/icons/quality.svg";
 
-const sharedText =
-  "Worldwide delivery on all. Authorit tively morph next-generation innovation with extensive models.";
+  const sharedText = "Worldwide delivery on all. Authorit tively morph next-generation innovation with extensive models.";
 
-const features = [
-  {
-    icon: deliveryIcon,
-    alt: "Доставка",
-    width: 45,
-    title: "Free Delivery",
-    text: sharedText,
-  },
-  {
-    icon: saleIcon,
-    alt: "Скидки",
-    width: 40,
-    title: "Sales & discounts",
-    text: sharedText,
-  },
-  {
-    icon: qualityIcon,
-    alt: "Качество",
-    width: 47,
-    title: "Quality assurance",
-    text: sharedText,
-  },
-];
+  const features = [
+    {icon: deliveryIcon, alt: "Доставка", width: 45, title: "Free Delivery", text: sharedText,},
+    {icon: saleIcon, alt: "Скидки", width: 40, title: "Sales & discounts", text: sharedText,},
+    {icon: qualityIcon, alt: "Качество", width: 47, title: "Quality assurance",text: sharedText,},
+  ];
 </script>
 
 <template>
