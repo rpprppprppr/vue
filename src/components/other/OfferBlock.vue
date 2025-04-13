@@ -1,4 +1,5 @@
 <script setup>
+  import { ROUTES } from "@/config/routes.js";
   defineProps({
     image: String,
     alt: String,
@@ -9,11 +10,13 @@
 
 <template>
   <div class="offer__block">
-    <img class="offer__photo" :src="image" :alt="alt" />
-    <div class="offer__text">
-      {{ line1 }} <br />
-      <span>{{ line2 }}</span>
-    </div>
+    <RouterLink :to="{ name: ROUTES.CATALOG }">
+      <img class="offer__photo" :src="image" :alt="alt" />
+      <div class="offer__text">
+        {{ line1 }} <br />
+        <span>{{ line2 }}</span>
+      </div>
+    </RouterLink>
   </div>
 </template>
 
@@ -21,7 +24,6 @@
   .offer__block {
     position: relative;
     display: flex;
-    cursor: pointer;
 
     &:nth-child(4) {
       grid-column: 1 / -1;

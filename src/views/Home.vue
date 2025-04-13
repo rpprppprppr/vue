@@ -5,7 +5,6 @@
   import ProductCard from "@/components/other/ProductCard.vue";
   import OfferBlock from "@/components/other/OfferBlock.vue";
   import DefaultLayout from "@/layouts/Default.vue";
-  import cartIcon from "@/assets/icons/cart.svg";
 
   const offerImages = import.meta.glob('@/assets/img/offer-*.png', { eager: true });
   const offerLabels = [
