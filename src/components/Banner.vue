@@ -71,6 +71,7 @@
       flex-direction: column;
       gap: 32px;
       justify-content: initial;
+      height: fit-content;
     }
   }  
 </style>
