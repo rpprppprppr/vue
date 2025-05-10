@@ -1,42 +1,42 @@
 <script setup>
-import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
+  import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 
-import Feature from "@/components/Feature.vue";
-import SecondaryLayout from "@/layouts/Secondary.vue";
-import ProductCard from "@/components/other/ProductCard.vue";
-import Paginator from "@/components/other/Paginator.vue";
-import FilterPanel from "@/components/other/FilterPanel.vue";
+  import Feature from "@/components/Feature.vue";
+  import SecondaryLayout from "@/layouts/Secondary.vue";
+  import ProductCard from "@/components/other/ProductCard.vue";
+  import Paginator from "@/components/other/Paginator.vue";
+  import FilterPanel from "@/components/other/FilterPanel.vue";
 
-const currentPage = ref(1)
-const windowWidth = ref(window.innerWidth)
-const updateWidth = () => { windowWidth.value = window.innerWidth }
+  const currentPage = ref(1)
+  const windowWidth = ref(window.innerWidth)
+  const updateWidth = () => { windowWidth.value = window.innerWidth }
 
-onMounted(() => { window.addEventListener('resize', updateWidth) })
-onBeforeUnmount(() => { window.removeEventListener('resize', updateWidth) })
+  onMounted(() => { window.addEventListener('resize', updateWidth) })
+  onBeforeUnmount(() => { window.removeEventListener('resize', updateWidth) })
 
-const images = import.meta.glob('@/assets/img/catalog-*.png', { eager: true });
+  const images = import.meta.glob('@/assets/img/catalog-*.png', { eager: true });
 
-const productInfo = {
-  name: "ELLERY X M'O CAPSULE",
-  description:
-    "Known for her sculptural takes on traditional tailoring, Australian arbiter of cool Kym Ellery teams up with Moda Operandi.",
-  price: "$52.00",
-};
-
-const allProducts = Array.from({ length: 9 }, (_, i) => {
-  const imgPath = `/src/assets/img/catalog-${i + 1}.png`;
-  return {
-    ...productInfo,
-    image: images[imgPath].default,
+  const productInfo = {
+    name: "ELLERY X M'O CAPSULE",
+    description:
+      "Known for her sculptural takes on traditional tailoring, Australian arbiter of cool Kym Ellery teams up with Moda Operandi.",
+    price: "$52.00",
   };
-})
 
-const cardsPerPage = computed(() => {
-  if (windowWidth.value >= 768 && windowWidth.value < 1600) return 8
-  return 9
-})
+  const allProducts = Array.from({ length: 9 }, (_, i) => {
+    const imgPath = `/src/assets/img/catalog-${i + 1}.png`;
+    return {
+      ...productInfo,
+      image: images[imgPath].default,
+    };
+  })
 
-const visibleProducts = computed(() => allProducts.slice(0, cardsPerPage.value))
+  const cardsPerPage = computed(() => {
+    if (windowWidth.value >= 768 && windowWidth.value < 1600) return 8
+    return 9
+  })
+
+  const visibleProducts = computed(() => allProducts.slice(0, cardsPerPage.value))
 </script>
 
 <template>

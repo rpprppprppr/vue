@@ -1,13 +1,16 @@
 <script setup>
   import { ref, onMounted, onBeforeUnmount } from 'vue'
+  import CustomSelect from "@/components/other/CustomSelect.vue"
   import filterIcon from "@/assets/icons/burger.svg"
-  import arrowIcon from "@/assets/icons/arrow.svg"
 
   const activeMenu = ref(null)
   const showCategoriesSection = ref(true)
   const showBrandSection = ref(false)
   const showDesignerSection = ref(false)
 
+  const selectedTrending = ref([])
+  const selectedSizes = ref([])
+  const selectedPrices = ref([])
 
   const categoriesItems = [
     "Accessories", "Bags", "Denim", "Hoodies & Sweatshirts", 
@@ -71,38 +74,9 @@
     </div>
 
     <div class="filter__right">
-      <div class="filter">    
-        <div class="filter__name" @click="toggleMenu('trending')">TRENDING NOW <img :src="arrowIcon" /></div>
-          <div v-if="activeMenu === 'trending'" class="filter__menu filter__menu--simple">
-            <div class="items__list">
-              <label><input type="checkbox" class="items__checkbox" /> Trending Item 1</label>
-              <label><input type="checkbox" class="items__checkbox" /> Trending Item 2</label>
-          </div>
-        </div>
-      </div>
-
-      <div class="filter"> 
-        <div class="filter__name" @click="toggleMenu('size')">SIZE <img :src="arrowIcon" /></div>
-          <div v-if="activeMenu === 'size'" class="filter__menu filter__menu--simple">
-            <div class="items__list">
-              <label><input type="checkbox" class="items__checkbox" /> XS</label>
-              <label><input type="checkbox" class="items__checkbox" /> S</label>
-              <label><input type="checkbox" class="items__checkbox" /> M</label>
-              <label><input type="checkbox" class="items__checkbox" /> L</label>
-          </div>
-        </div>
-      </div>
-
-      <div class="filter">
-        <div class="filter__name" @click="toggleMenu('price')">PRICE <img :src="arrowIcon" /></div>
-          <div v-if="activeMenu === 'price'" class="filter__menu filter__menu--simple">
-            <div class="items__list">
-              <label><input type="checkbox" class="items__checkbox" /> $0 - $50</label>
-              <label><input type="checkbox" class="items__checkbox" /> $51 - $100</label>
-              <label><input type="checkbox" class="items__checkbox" /> $101 - $200</label>
-          </div>
-        </div>
-      </div>
+      <CustomSelect title="TRENDING NOW" :options="['Trend 1', 'Trend 2']" v-model="selectedTrending" :multiple="true"/>
+      <CustomSelect title="SIZE" :options="['XS', 'S', 'M', 'L']" v-model="selectedSizes" :multiple="true"/>
+      <CustomSelect title="PRICE" :options="['$0-50', '$51-100', '$101-200']" v-model="selectedPrices" :multiple="false"/>
     </div>
   </div>
 </template>  
