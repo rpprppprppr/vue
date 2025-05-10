@@ -1,5 +1,5 @@
 <script setup>
-  import { ref, onMounted, onBeforeUnmount } from 'vue'
+  import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 
   const props = defineProps({
     title: String,
@@ -9,6 +9,20 @@
         type: Boolean,
         default: true,
     },
+    showSelectedInTitle: {
+      type: Boolean,
+      default: false,
+    }
+  })
+
+  const displayTitle = computed(() => {
+    if (!props.showSelectedInTitle) return props.title
+
+    if (props.multiple) {
+      return props.modelValue.length > 0 ? `${props.title}: ${props.modelValue.join(', ')}` : props.title
+    } else {
+      return props.modelValue ? `${props.title}: ${props.modelValue}` : props.title
+    }
   })
 
   const emit = defineEmits(['update:modelValue'])
@@ -52,7 +66,7 @@
 <template>
   <div class="filter" ref="selectRef">
     <div class="filter__name" @click="toggle">
-      {{ title }}
+      {{ displayTitle }}
       <img src="@/assets/icons/arrow.svg" />
     </div>
 

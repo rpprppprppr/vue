@@ -62,9 +62,9 @@
         <div class="product__price">$561</div>
 
         <div class="options">
-          <CustomSelect v-model="color" title="CHOOSE COLOR" :options="['Black', 'White']" :multiple="false" />
-          <CustomSelect v-model="size" title="CHOOSE SIZE" :options="['S', 'M', 'L']" :multiple="false" />
-          <CustomSelect v-model="quantity" title="QUANTITY" :options="['1', '2', '3']" :multiple="false" />
+          <CustomSelect v-model="color" title="CHOOSE COLOR" :options="['Black', 'White']" :multiple="false" :showSelectedInTitle="true"/>
+          <CustomSelect v-model="size" title="CHOOSE SIZE" :options="['S', 'M', 'L']" :multiple="false" :showSelectedInTitle="true"/>
+          <CustomSelect v-model="quantity" title="QUANTITY" :options="['1', '2', '3']" :multiple="false" :showSelectedInTitle="true"/>
         </div>
 
         <button class="product__button">
