@@ -6,6 +6,8 @@
   import CustomSelect from "@/components/other/CustomSelect.vue";
   import productImg from "@/assets/img/product.png";
   import cartIcon from "@/assets/icons/cart-pink.svg";
+  import prevIcon from "@/assets/icons/prev-page.svg";
+  import nextIcon from "@/assets/icons/next-page.svg";
 
   const color = ref('')
   const size = ref('')
@@ -47,8 +49,8 @@
     <div class="product__container">
       <div class="slider">
         <img :src=productImg alt="Product Image" class="product__image" />
-        <button class="slider__arrow left"><</button>
-        <button class="slider__arrow right">></button>
+        <button class="slider__arrow left"><img :src="prevIcon" alt="Предыдущее фото" /></button>
+        <button class="slider__arrow right"><img :src="nextIcon" alt="Следующее фото" /></button>
       </div>
 
       <div class="product__info">
@@ -110,8 +112,11 @@
     background-color: rgba(42, 42, 42, 0.15);
     border: 0;
     border-radius: 0;
-    font-size: 35px;
-    padding: 5px 15px;
+    padding: 12px 16px;
+  }
+
+  .slider__arrow img {
+    width: 13px;
   }
 
   .slider__arrow.left {
