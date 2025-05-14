@@ -1,7 +1,7 @@
 <script setup>
   import { ref } from 'vue'
   import closeIcon from "@/assets/icons/close.svg";
-  
+
   const props = defineProps({
     image: String,
     name: String,
@@ -11,13 +11,16 @@
     quantity: Number
   });
 
+  const emit = defineEmits(['remove']);
   const selectedQuantity = ref(props.quantity || 1);
 </script>
 
 <template>
   <div class="cart__card">
     <img class="card__photo" :src="image" :alt="name" />
-    <button class="close__button"><img :src="closeIcon" alt="Закрыть" width="26" /></button>
+    <button class="close__button" @click="emit('remove')">
+      <img :src="closeIcon" alt="Закрыть" width="26" />
+    </button>
 
     <div class="card__info">
       <div class="card__name">{{ name }}</div>

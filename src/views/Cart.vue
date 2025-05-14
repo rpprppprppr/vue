@@ -1,16 +1,42 @@
 <script setup>
+  import { ref } from 'vue';
   import SecondaryLayout from "@/layouts/Secondary.vue";
   import CustomInput from "@/components/other/CustomInput.vue";
   import CustomButton from "@/components/other/CustomButton.vue";
   import CartCard from "@/components/other/CartCard.vue";
+
+  const cartItems = ref([
+    {
+      id: 1,
+      image: "src/assets/img/cart-1.png",
+      name: "MANGO PEOPLE T-SHIRT",
+      price: "$300",
+      color: "Red",
+      size: "XL",
+      quantity: 2
+    },
+    {
+      id: 2,
+      image: "src/assets/img/cart-2.png",
+      name: "MANGO PEOPLE T-SHIRT",
+      price: "$300",
+      color: "Red",
+      size: "XL",
+      quantity: 2
+    }
+  ]);
+
+  function removeItem(id) {
+    cartItems.value = cartItems.value.filter(item => item.id !== id);
+  }
 </script>
+
 
 <template>
   <SecondaryLayout>
     <div class="cart">
       <div class="left">
-        <CartCard image="src/assets/img/cart-1.png" name="MANGO  PEOPLE  T-SHIRT" price="$300" color="Red" size="XL" quantity=2 />
-        <CartCard image="src/assets/img/cart-2.png" name="MANGO  PEOPLE  T-SHIRT" price="$300" color="Red" size="XL" quantity=2 />
+        <CartCard v-for="item in cartItems" :key="item.id" v-bind="item" @remove="removeItem(item.id)" />
 
         <div class="cart__buttons">
           <CustomButton class="cart__button">Clear shopping cart</CustomButton>
@@ -54,13 +80,16 @@
   }
 
   .cart__buttons {
+    font-size: 14px;
     margin-top: 32px;
     display: flex;
+    gap: 160px;
     justify-content: space-between;
   }
 
   .cart__button, .adress__button {
     padding: 16px 40px;
+    width: fit-content;
     color: black;
     font-weight: 300;
     border: solid 1px #A4A4A4;
