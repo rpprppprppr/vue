@@ -13,8 +13,8 @@
         <CartCard image="src/assets/img/cart-2.png" name="MANGO  PEOPLE  T-SHIRT" price="$300" color="Red" size="XL" quantity=2 />
 
         <div class="cart__buttons">
-          <CustomButton class="cart__button">CLEAR SHOPPING CART</CustomButton>
-          <CustomButton class="cart__button">CONTINUE SHOPPING</CustomButton>
+          <CustomButton class="cart__button">Clear shopping cart</CustomButton>
+          <CustomButton class="cart__button">Continue shopping</CustomButton>
         </div>
       </div>
 
@@ -24,7 +24,7 @@
           <CustomInput placeholder="Bangladesh" />
           <CustomInput placeholder="State" />
           <CustomInput placeholder="Postcode / Zip" />
-          <CustomButton class="adress__button">GET A QUOTE</CustomButton>
+          <CustomButton class="adress__button">Get a quote</CustomButton>
         </div>
 
         <div class="total__block">
@@ -65,6 +65,7 @@
     font-weight: 300;
     border: solid 1px #A4A4A4;
     background-color: white;
+    text-transform: uppercase;
   }
 
   .cart__button:hover, .adress__button:hover {
@@ -161,19 +162,74 @@
     }
   }
 
-  // @media screen and (max-width: 767px) {
-  //   .cart {
-  //     padding: 40px 8px 96px;
-  //     gap: 48px;
-  //   }
+  @media screen and (max-width: 767px) {
+    .cart {
+      padding: 40px 8px 96px;
+      gap: 48px;
+    }
 
-  //   .left {
-  //     gap: 32px;
-  //   }
+    .left {
+      gap: 32px;
+    }
 
-  //   .cart__buttons {
-  //     margin-top: 0;
-  //     gap: 8px;
-  //   }
-  // }
+    .cart__buttons {
+      margin-top: 0;
+      gap: 8px;
+    }
+
+    .cart__button, .adress__button {
+      padding: 10px 8px;
+      font-size: 12px;
+      width: 174px;
+      text-transform: none;
+    }
+
+    .right {
+      gap: 48px;
+      flex-direction: column;
+    }
+
+    .adress__button {
+      padding: 10px 20px;
+      font-size: 12px;
+      width: fit-content;
+    }
+
+    .total__block {
+      background-color: #F5F3F3;
+      padding: 40px 44px;
+      text-align: right;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      justify-content: center;
+    }
+
+    .total__block hr {
+      border: none;
+      border-bottom: 1px solid #E2E2E2;
+      margin: 8px 0;
+      width: 274px;
+    }
+
+    .subtotal__text {
+      font-weight: 400;
+      font-size: 11px;
+    }
+
+    .total__text {
+      font-weight: 300;
+    }
+
+    .total__text span {
+      color: #F16D7F;
+      font-weight: 700;
+    }
+
+    .total__button {
+      max-width: 272px;
+      width: 100%;
+      font-weight: 300; 
+    }
+  }
 </style>

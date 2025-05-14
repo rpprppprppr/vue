@@ -94,14 +94,41 @@
     }
   }
 
-  // @media screen and (max-width: 767px) {
-  //   .cart__card {
-  //     width: 358px;
-  //     height: 188px;
-  //   }
+  @media screen and (max-width: 767px) {
+    .cart__card {
+      gap: 16px;
+      width: 358px;
+      height: 188px;
+      box-shadow: 8px 8px 21px 0 rgba(0, 0, 0, 0.13);
+    }
 
-  //   .cart__card img {
-  //     height: 188px;
-  //   }
-  // }
+    .card__photo {
+      height: 188px;
+    }
+
+    .close__button {
+      right: 12px;
+      top: 16px;
+    }
+
+    .close__button img {
+      width: 10px;
+    }
+
+    .card__info {
+      margin-top: 14px;
+      font-size: 14px;
+      max-width: 140px;
+    }
+
+    .card__name {
+      font-size: 16px;
+      margin-bottom: 26px;
+    }
+
+    .card__text select {
+      font-size: 10px;
+      padding: 1px 6px;
+    }
+  }
 </style>  
