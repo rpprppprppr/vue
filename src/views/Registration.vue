@@ -2,6 +2,8 @@
   import SecondaryLayout from "@/layouts/Secondary.vue";
   import arrowIcon from "@/assets/icons/arrow-left.svg";
   import checkIcon from "@/assets/icons/check.svg";
+  import CustomInput from "@/components/other/CustomInput.vue";
+  import CustomButton from "@/components/other/CustomButton.vue";
 </script>
 
 <template>
@@ -10,24 +12,24 @@
       <div class="left">
         <div class="reg__block">
           <div class="reg__input-label">Your Name</div>
-          <input type="text" class="reg__input" name="" id="" placeholder="First Name">
-          <input type="text" class="reg__input" name="" id="" placeholder="Last Name">
+          <CustomInput placeholder="First Name" />
+          <CustomInput placeholder="Last Name" />
         </div>
 
         <div class="reg">
-          <label><input class="reg__radio" type="radio" name="" id="">Male</label>
-          <label><input class="reg__radio" type="radio" name="" id="">Female</label>
+          <CustomInput placeholder="Male" />
+          <CustomInput placeholder="Female" />
         </div>
 
         <div class="reg__block">
           <div class="reg__input-label">Login Detail</div>
-          <input type="text" class="reg__input" name="" id="" placeholder="Email">
-          <input type="text" class="reg__input" name="" id="" placeholder="Password">
+          <CustomInput placeholder="Email" />
+          <CustomInput placeholder="Password" />
         </div>
 
         <div class="reg__text">Please use 8 or more characters, with at least 1 number and a mixture of uppercase and lowercase letters</div>
 
-        <button class="reg__button">JOIN NOW <img :src="arrowIcon" /></button>
+        <CustomButton>JOIN NOW <img :src="arrowIcon" /></CustomButton>
       </div>
 
       <div class="right">
@@ -72,14 +74,6 @@
     gap: 20px;
   }
 
-  .reg__input {
-    border: solid 1px #A4A4A4;
-    padding: 16px;
-
-    color: #B1B1B1;
-    font-size: 13px;
-  }
-
   .reg {
     display: flex;
     gap: 20px;
@@ -96,20 +90,6 @@
     color: #B1B1B1;
 
     margin-top: -15px;
-  }
-
-  .reg__button {
-    display: flex;
-    gap: 20px;
-    padding: 16px 30px;
-    background-color: #F16D7F;
-    color: white;
-    border-radius: 0;
-    width: fit-content;
-  }
-
-  .reg__button:hover {
-    background-color: #b8606b;
   }
 
   .right {
