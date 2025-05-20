@@ -1,7 +1,7 @@
 <script setup>
   import SecondaryLayout from "@/layouts/Secondary.vue";
-  import arrowIcon from "@/assets/icons/arrow-left.svg";
-  import checkIcon from "@/assets/icons/check.svg";
+  import arrowIcon from "@/assets/svg/arrow-left.svg";
+  import checkIcon from "@/assets/svg/check.svg";
   import CustomInput from "@/components/other/CustomInput.vue";
   import CustomButton from "@/components/other/CustomButton.vue";
 </script>

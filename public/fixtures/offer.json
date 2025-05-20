@@ -1,0 +1,22 @@
+[
+    {
+        "id": "1",
+        "description": "30% OFF",
+        "category": "FOR WOMEN"
+    },
+    {
+        "id": "2",
+        "description": "HOT DEAL",
+        "category": "FOR MEN"
+    },
+    {
+        "id": "3",
+        "description": "NEW ARRIVALS",
+        "category": "FOR KIDS"
+    },
+    {
+        "id": "4",
+        "description": "LUXURIOUS & TRENDY",
+        "category": "ACCESSORIES"
+    }
+]

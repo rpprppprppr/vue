@@ -67,7 +67,7 @@
   <div class="filter" ref="selectRef">
     <div class="filter__name" @click="toggle">
       {{ displayTitle }}
-      <img src="@/assets/icons/arrow.svg" />
+      <img src="@/assets/svg/arrow.svg" />
     </div>
 
     <div v-if="isOpen" class="filter__menu filter__menu--simple">

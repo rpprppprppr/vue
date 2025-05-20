@@ -1,6 +1,6 @@
 <script setup>
   import { ref } from "vue";
-  import closeIcon from "@/assets/icons/close.svg";
+  import closeIcon from "@/assets/svg/close.svg";
 
   const isOpen = ref(false);
   const manItems = ["Accessories", "Bags", "Denim", "T-Shirts"];

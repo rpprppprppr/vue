@@ -1,39 +1,33 @@
 <script setup>
-  import { ROUTES } from "@/config/routes.js";
+  import { ref, onMounted } from "vue";
+  import { ROUTES } from "@/config/constants/routes.js";
+  import { useApi } from "@/api/index.js";
   import MainBanner from "@/components/MainBanner.vue";
   import Feature from "@/components/Feature.vue";
   import ProductCard from "@/components/other/ProductCard.vue";
   import OfferBlock from "@/components/other/OfferBlock.vue";
   import DefaultLayout from "@/layouts/Default.vue";
 
-  const offerImages = import.meta.glob('@/assets/img/offer-*.png', { eager: true });
-  const offerLabels = [
-    { alt: "Для женщин", line1: "30% OFF", line2: "FOR WOMEN" },
-    { alt: "Для мужчин", line1: "HOT DEAL", line2: "FOR MEN" },
-    { alt: "Для детей", line1: "NEW ARRIVALS", line2: "FOR KIDS" },
-    { alt: "Акксесуары", line1: "LUXURIOUS & TRENDY", line2: "ACCESSORIES" },
-  ];
-  const offers = offerLabels.map((label, i) => {
-    const path = `/src/assets/img/offer-${i + 1}.png`;
-    return {
-      ...label,
-      image: offerImages[path].default,
-    };
-  });
+  const catalog = ref([]);
+  const offers = ref([]);
+  
+  onMounted(async () => {
+    const { get } = useApi();
 
-  const images = import.meta.glob('@/assets/img/product-*.png', { eager: true });
-  const productInfo = {
-    name: "ELLERY X M'O CAPSULE",
-    description:
-      "Known for her sculptural takes on traditional tailoring, Australian arbiter of cool Kym Ellery teams up with Moda Operandi.",
-    price: "$52.00",
-  };
-  const products = Array.from({ length: 6 }, (_, i) => {
-    const imgPath = `/src/assets/img/product-${i + 1}.png`;
-    return {
-      ...productInfo,
-      image: images[imgPath].default,
-    };
+    const offerResponse = await get("fixtures/offer.json");
+    offers.value = offerResponse.data.map(item => ({
+      description: item.description,
+      category: item.category,
+      image: `img/offer/${item.id}.png`
+    }));
+
+    const catalogResponse = await get("fixtures/catalog.json");
+    catalog.value = catalogResponse.data.map(item => ({
+      title: item.title,
+      description: item.description,
+      price: item.price,
+      image: `img/product/${item.id}.png`
+    }));
   });
 </script>
 
@@ -48,8 +42,7 @@
       <div class="block__title">Fetured Items</div>
       <div class="block__subtitle">Shop for items based on what we featured in this week</div>
       <div class="products__block">
-        <ProductCard v-for="(product, index) in products" :key="index" v-bind="product"
-        />
+        <ProductCard v-for="(product, index) in catalog" :key="index" v-bind="product" />
       </div>
       <RouterLink :to="{ name: ROUTES.CATALOG }">
         <button class="block__button">Browse All Product</button>

@@ -1,7 +1,7 @@
 <script setup>
-  import deliveryIcon from "@/assets/icons/delivery.svg";
-  import saleIcon from "@/assets/icons/sale.svg";
-  import qualityIcon from "@/assets/icons/quality.svg";
+  import deliveryIcon from "@/assets/svg/delivery.svg";
+  import saleIcon from "@/assets/svg/sale.svg";
+  import qualityIcon from "@/assets/svg/quality.svg";
 
   const sharedText = "Worldwide delivery on all. Authorit tively morph next-generation innovation with extensive models.";
 

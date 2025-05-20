@@ -1,8 +1,8 @@
 <script setup>
-  import facebookIcon from "@/assets/icons/facebook-icon.svg";
-  import instagramIcon from "@/assets/icons/instagram-icon.svg";
-  import pinterestIcon from "@/assets/icons/pinterest-icon.svg";
-  import twitterIcon from "@/assets/icons/twitter-icon.svg";
+  import facebookIcon from "@/assets/svg/facebook-icon.svg";
+  import instagramIcon from "@/assets/svg/instagram-icon.svg";
+  import pinterestIcon from "@/assets/svg/pinterest-icon.svg";
+  import twitterIcon from "@/assets/svg/twitter-icon.svg";
 </script>
 
 <template>

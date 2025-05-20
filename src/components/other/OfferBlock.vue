@@ -1,20 +1,19 @@
 <script setup>
-  import { ROUTES } from "@/config/routes.js";
+  import { ROUTES } from "@/config/constants/routes.js";
   defineProps({
     image: String,
-    alt: String,
-    line1: String,
-    line2: String
+    description: String,
+    category: String
   });
 </script>
 
 <template>
   <div class="offer__block">
     <RouterLink :to="{ name: ROUTES.CATALOG }">
-      <img class="offer__photo" :src="image" :alt="alt" />
+      <img class="offer__photo" :src="image" />
       <div class="offer__text">
-        {{ line1 }} <br />
-        <span>{{ line2 }}</span>
+        {{ description }} <br />
+        <span>{{ category }}</span>
       </div>
     </RouterLink>
   </div>

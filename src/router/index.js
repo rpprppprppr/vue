@@ -5,7 +5,7 @@ import Catalog from "@/views/Catalog.vue";
 import Cart from "@/views/Cart.vue";
 import Product from "@/views/Product.vue";
 import Registration from "@/views/Registration.vue";
-import { ROUTES } from "@/config/routes";
+import { ROUTES } from "@/config/constants/routes.js";
 
 const routes = [
   { path: "/", name: ROUTES.HOME, component: Home },

@@ -1,7 +1,7 @@
 <script setup>
   import { ref, computed } from 'vue'
-  import prevIcon from "@/assets/icons/prev-page.svg";
-  import nextIcon from "@/assets/icons/next-page.svg";
+  import prevIcon from "@/assets/svg/prev-page.svg";
+  import nextIcon from "@/assets/svg/next-page.svg";
 
   const props = defineProps({
     totalPages: {

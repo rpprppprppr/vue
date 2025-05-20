@@ -1,10 +1,11 @@
 <script setup>
-  import { ROUTES } from "@/config/routes.js";
-  import cartIcon from "@/assets/icons/cart.svg";
+  import { ROUTES } from "@/config/constants/routes.js";
+  import cartIcon from "@/assets/svg/cart.svg";
   
   defineProps({
+    id: String,
     image: String,
-    name: String,
+    title: String,
     description: String,
     price: String
   });
@@ -13,7 +14,7 @@
 <template>
   <div class="product__card">
     <div class="product__image-wrapper">
-      <img class="product__photo" :src="image" :alt="name" />
+      <img class="product__photo" :src="image" />
       <div class="product__overlay">
         <button class="product__button">
           <img :src="cartIcon" alt="Корзина" width="26" /> Add to Cart
@@ -22,7 +23,7 @@
     </div>
     <RouterLink :to="{ name: ROUTES.PRODUCT }">
       <div class="product__text">
-        <div class="product__name">{{ name }}</div>
+        <div class="product__title">{{ title }}</div>
         <div class="product__description">{{ description }}</div>
         <div class="product__price">{{ price }}</div>
       </div>
@@ -90,7 +91,7 @@
     gap: 15px;
   }
 
-  .product__name {
+  .product__title {
     color: black;
     font-size: 14px;
     text-decoration: none;

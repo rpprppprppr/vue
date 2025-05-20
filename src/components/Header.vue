@@ -1,12 +1,12 @@
 <script setup>
   import { ref } from "vue";
   import Menu from "@/components/Menu.vue";
-  import { ROUTES } from "@/config/routes.js";
-  import logo from "@/assets/icons/logo.svg";
-  import searchIcon from "@/assets/icons/search.svg";
-  import menuIcon from "@/assets/icons/menu.svg";
-  import userIcon from "@/assets/icons/user.svg";
-  import cartIcon from "@/assets/icons/cart.svg";
+  import { ROUTES } from "@/config/constants/routes.js";
+  import logo from "@/assets/svg/logo.svg";
+  import searchIcon from "@/assets/svg/search.svg";
+  import menuIcon from "@/assets/svg/menu.svg";
+  import userIcon from "@/assets/svg/user.svg";
+  import cartIcon from "@/assets/svg/cart.svg";
 
   const menuRef = ref(null);
 

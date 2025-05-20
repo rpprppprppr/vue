@@ -1,6 +1,6 @@
 <script setup>
   import { ref } from 'vue'
-  import closeIcon from "@/assets/icons/close.svg";
+  import closeIcon from "@/assets/svg/close.svg";
 
   const props = defineProps({
     image: String,

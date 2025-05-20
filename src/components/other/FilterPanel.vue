@@ -1,7 +1,7 @@
 <script setup>
   import { ref, onMounted, onBeforeUnmount } from 'vue'
   import CustomSelect from "@/components/other/CustomSelect.vue"
-  import filterIcon from "@/assets/icons/burger.svg"
+  import filterIcon from "@/assets/svg/burger.svg"
 
   const activeMenu = ref(null)
   const showCategoriesSection = ref(true)

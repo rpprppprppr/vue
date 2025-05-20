@@ -5,9 +5,9 @@
   import ProductCard from "@/components/other/ProductCard.vue";
   import CustomSelect from "@/components/other/CustomSelect.vue";
   import productImg from "@/assets/img/product.png";
-  import cartIcon from "@/assets/icons/cart-pink.svg";
-  import prevIcon from "@/assets/icons/prev-page.svg";
-  import nextIcon from "@/assets/icons/next-page.svg";
+  import cartIcon from "@/assets/svg/cart-pink.svg";
+  import prevIcon from "@/assets/svg/prev-page.svg";
+  import nextIcon from "@/assets/svg/next-page.svg";
 
   const color = ref('')
   const size = ref('')
