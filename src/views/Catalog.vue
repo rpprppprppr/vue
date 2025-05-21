@@ -1,6 +1,6 @@
 <script setup>
   import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
-
+  import { useApi } from "@/api/index.js";
   import Feature from "@/components/Feature.vue";
   import SecondaryLayout from "@/layouts/Secondary.vue";
   import ProductCard from "@/components/other/ProductCard.vue";
@@ -11,32 +11,30 @@
   const windowWidth = ref(window.innerWidth)
   const updateWidth = () => { windowWidth.value = window.innerWidth }
 
-  onMounted(() => { window.addEventListener('resize', updateWidth) })
+  const catalog = ref([]);
+  
+  onMounted(async () => {
+    window.addEventListener('resize', updateWidth);
+
+    const { get } = useApi();
+
+    const catalogResponse = await get("fixtures/catalog.json");
+    catalog.value = catalogResponse.data.map(item => ({
+      title: item.title,
+      description: item.description,
+      price: item.price,
+      image: `img/catalog/${item.id}.png`
+    }));
+  });
+
   onBeforeUnmount(() => { window.removeEventListener('resize', updateWidth) })
-
-  const images = import.meta.glob('@/assets/img/catalog-*.png', { eager: true });
-
-  const productInfo = {
-    name: "ELLERY X M'O CAPSULE",
-    description:
-      "Known for her sculptural takes on traditional tailoring, Australian arbiter of cool Kym Ellery teams up with Moda Operandi.",
-    price: "$52.00",
-  };
-
-  const allProducts = Array.from({ length: 9 }, (_, i) => {
-    const imgPath = `/src/assets/img/catalog-${i + 1}.png`;
-    return {
-      ...productInfo,
-      image: images[imgPath].default,
-    };
-  })
 
   const cardsPerPage = computed(() => {
     if (windowWidth.value >= 768 && windowWidth.value < 1600) return 8
     return 9
   })
 
-  const visibleProducts = computed(() => allProducts.slice(0, cardsPerPage.value))
+  const visibleProducts = computed(() => catalog.value.slice(0, cardsPerPage.value))
 </script>
 
 <template>

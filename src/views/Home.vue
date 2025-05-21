@@ -21,12 +21,12 @@
       image: `img/offer/${item.id}.png`
     }));
 
-    const catalogResponse = await get("fixtures/catalog.json");
+    const catalogResponse = await get("fixtures/home.json");
     catalog.value = catalogResponse.data.map(item => ({
       title: item.title,
       description: item.description,
       price: item.price,
-      image: `img/product/${item.id}.png`
+      image: `img/home/${item.id}.png`
     }));
   });
 </script>
