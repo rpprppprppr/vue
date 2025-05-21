@@ -2,6 +2,7 @@
   import { ref, onMounted } from "vue";
   import { ROUTES } from "@/config/constants/routes.js";
   import { useApi } from "@/api/index.js";
+  
   import MainBanner from "@/components/MainBanner.vue";
   import Feature from "@/components/Feature.vue";
   import ProductCard from "@/components/other/ProductCard.vue";
@@ -21,12 +22,12 @@
       image: `img/offer/${item.id}.png`
     }));
 
-    const catalogResponse = await get("fixtures/home.json");
+    const catalogResponse = await get("fixtures/home-catalog.json");
     catalog.value = catalogResponse.data.map(item => ({
       title: item.title,
       description: item.description,
       price: item.price,
-      image: `img/home/${item.id}.png`
+      image: `img/catalog/${item.id}.png`
     }));
   });
 </script>

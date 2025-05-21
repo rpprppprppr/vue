@@ -1,10 +1,10 @@
 <script setup>
   import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
+  import { useApi } from "@/api/index.js";
 
   import SecondaryLayout from "@/layouts/Secondary.vue";
   import ProductCard from "@/components/other/ProductCard.vue";
   import CustomSelect from "@/components/other/CustomSelect.vue";
-  import productImg from "@/assets/img/product.png";
   import cartIcon from "@/assets/svg/cart-pink.svg";
   import prevIcon from "@/assets/svg/prev-page.svg";
   import nextIcon from "@/assets/svg/next-page.svg";
@@ -16,52 +16,71 @@
   const windowWidth = ref(window.innerWidth)
   const updateWidth = () => { windowWidth.value = window.innerWidth }
 
-  onMounted(() => { window.addEventListener('resize', updateWidth) })
-  onBeforeUnmount(() => { window.removeEventListener('resize', updateWidth) })
+  const catalog = ref([]);
+  const productData = ref(null);
 
-  const images = import.meta.glob('@/assets/img/catalog-*.png', { eager: true });
+  const sliderImages = ref([]);
+  const currentSlide = ref(0);
 
-  const productInfo = {
-    name: "ELLERY X M'O CAPSULE",
-    description:
-      "Known for her sculptural takes on traditional tailoring, Australian arbiter of cool Kym Ellery teams up with Moda Operandi.",
-    price: "$52.00",
+  const currentImage = computed(() => {
+    if (sliderImages.value.length === 0) return '';
+    return `img/slider/${sliderImages.value[currentSlide.value]}`;
+  });
+
+  const nextSlide = () => {
+    currentSlide.value = (currentSlide.value + 1) % sliderImages.value.length;
   };
 
-  const allProducts = Array.from({ length: 3 }, (_, i) => {
-    const imgPath = `/src/assets/img/catalog-${i + 1}.png`;
-    return {
-      ...productInfo,
-      image: images[imgPath].default,
-    };
-  })
+  const prevSlide = () => {
+    currentSlide.value = (currentSlide.value - 1 + sliderImages.value.length) % sliderImages.value.length;
+  };
+  
+  onMounted(async () => {
+    window.addEventListener('resize', updateWidth) ;
+
+    const { get } = useApi();
+
+    const responseProduct = await get("fixtures/product-slider.json");
+    const product = responseProduct.data[0];
+    productData.value = product;
+
+    // Предполагаем, что у продукта с id = 1 есть 3 изображения: 1-1.png, 1-2.png, 1-3.png
+    const totalSlides = 3;
+    sliderImages.value = Array.from({ length: totalSlides }, (_, i) => `${product.id}-${i + 1}.png`);
+
+    const catalogResponse = await get("fixtures/product-catalog.json");
+    catalog.value = catalogResponse.data.map(item => ({
+      title: item.title,
+      description: item.description,
+      price: item.price,
+      image: `img/catalog/${item.id}.png`
+    }));
+  });
+
+  onBeforeUnmount(() => { window.removeEventListener('resize', updateWidth) })
 
   const cardsPerPage = computed(() => {
     if (windowWidth.value < 1600) return 2
     return 3
   })
 
-  const visibleProducts = computed(() => allProducts.slice(0, cardsPerPage.value))
+  const visibleProducts = computed(() => catalog.value.slice(0, cardsPerPage.value))
 </script>
 
 <template>
   <SecondaryLayout>
     <div class="product__container">
       <div class="slider">
-        <img :src=productImg alt="Product Image" class="product__image" />
-        <button class="slider__arrow left"><img :src="prevIcon" alt="Предыдущее фото" /></button>
-        <button class="slider__arrow right"><img :src="nextIcon" alt="Следующее фото" /></button>
+        <img :src="currentImage" class="product__image" />
+        <button class="slider__arrow left" @click="prevSlide"><img :src="prevIcon" alt="Предыдущее фото" /></button>
+        <button class="slider__arrow right" @click="nextSlide"><img :src="nextIcon" alt="Следующее фото" /></button>
       </div>
 
-      <div class="product__info">
-        <div class="category">WOMEN COLLECTION</div>
-        <div class="product__title">MOSCHINO CHEAP AND CHIC</div>
-        <div class="product__description">
-          Compellingly actualize fully researched processes before proactive outsourcing. 
-          Progressively syndicate collaborative architectures before cutting-edge services. 
-          Completely visualize parallel core competencies rather than exceptional portals. 
-        </div>
-        <div class="product__price">$561</div>
+      <div class="product__info" v-if="productData">
+        <div class="category">{{ productData.category }}</div>
+        <div class="product__title">{{ productData.title }}</div>
+        <div class="product__description">{{ productData.description }}</div>
+        <div class="product__price">{{ productData.price }}</div>
 
         <div class="options">
           <CustomSelect v-model="color" title="CHOOSE COLOR" :options="['Black', 'White']" :multiple="false" :showSelectedInTitle="true"/>

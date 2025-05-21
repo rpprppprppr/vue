@@ -1,6 +1,7 @@
 <script setup>
   import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
   import { useApi } from "@/api/index.js";
+  
   import Feature from "@/components/Feature.vue";
   import SecondaryLayout from "@/layouts/Secondary.vue";
   import ProductCard from "@/components/other/ProductCard.vue";
