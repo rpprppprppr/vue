@@ -1,0 +1,18 @@
+[
+    {
+        "id": 1,
+        "title": "MANGO PEOPLE T-SHIRT",
+        "price": 300,
+        "color": "Red",
+        "size": "XL",
+        "quantity": 2
+    },
+    {
+        "id": 2,
+        "title": "MANGO PEOPLE T-SHIRT",
+        "price": 300,
+        "color": "Red",
+        "size": "XL",
+        "quantity": 2
+    }
+]

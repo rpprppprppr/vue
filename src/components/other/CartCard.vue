@@ -1,30 +1,34 @@
 <script setup>
-  import { ref } from 'vue'
+  import { ref, watch } from 'vue'
   import closeIcon from "@/assets/svg/close.svg";
 
   const props = defineProps({
     image: String,
-    name: String,
+    title: String,
     price: String,
     color: String,
     size: String,
     quantity: Number
   });
 
-  const emit = defineEmits(['remove']);
+  const emit = defineEmits(['remove', 'update'])
   const selectedQuantity = ref(props.quantity || 1);
+
+  watch(selectedQuantity, (newQuantity) => {
+    emit('update', { quantity: newQuantity })
+  })
 </script>
 
 <template>
   <div class="cart__card">
-    <img class="card__photo" :src="image" :alt="name" />
+    <img class="card__photo" :src="image" />
     <button class="close__button" @click="emit('remove')">
       <img :src="closeIcon" alt="Закрыть" width="26" />
     </button>
 
     <div class="card__info">
-      <div class="card__name">{{ name }}</div>
-      <div class="card__text">Price: <span class="price">{{ price }}</span></div>
+      <div class="card__title">{{ title }}</div>
+      <div class="card__text">Price: <span class="price">${{ price }}</span></div>
       <div class="card__text">Color: {{ color }}</div>
       <div class="card__text">Size: {{ size }}</div>
       <div class="card__text">Quantity: 
@@ -44,6 +48,11 @@
     width: 652px;
     height: 306px;
     box-shadow: 17px 19px 24px 0 rgba(0, 0, 0, 0.13);
+  }
+
+  .card__photo {
+    width: 262px;
+    height: 306px;
   }
 
   .close__button {
@@ -69,7 +78,7 @@
     color: #575757;
   }
 
-  .card__name {
+  .card__title {
     color: #222222;
     font-size: 24px;
     margin-bottom: 36px;
@@ -124,7 +133,7 @@
       max-width: 140px;
     }
 
-    .card__name {
+    .card__title {
       font-size: 16px;
       margin-bottom: 26px;
     }

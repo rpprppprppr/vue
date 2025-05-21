@@ -1,34 +1,40 @@
 <script setup>
-  import { ref } from 'vue';
+  import { ref, computed, onMounted } from 'vue'
+  import { useApi } from "@/api/index.js";
+
   import SecondaryLayout from "@/layouts/Secondary.vue";
   import CustomInput from "@/components/other/CustomInput.vue";
   import CustomButton from "@/components/other/CustomButton.vue";
   import CartCard from "@/components/other/CartCard.vue";
 
-  const cartItems = ref([
-    {
-      id: 1,
-      image: "src/assets/img/cart-1.png",
-      name: "MANGO PEOPLE T-SHIRT",
-      price: "$300",
-      color: "Red",
-      size: "XL",
-      quantity: 2
-    },
-    {
-      id: 2,
-      image: "src/assets/img/cart-2.png",
-      name: "MANGO PEOPLE T-SHIRT",
-      price: "$300",
-      color: "Red",
-      size: "XL",
-      quantity: 2
-    }
-  ]);
+  const cart = ref([]);
+  
+  onMounted(async () => {
+    const { get } = useApi();
+
+    const cartResponse = await get("fixtures/cart.json");
+    cart.value = cartResponse.data.map(item => ({
+      id: item.id,
+      title: item.title,
+      price: item.price,
+      color: item.color,
+      size: item.size,
+      quantity: item.quantity,
+      image: `img/catalog/${item.id}.png`
+    }));
+  });
 
   function removeItem(id) {
-    cartItems.value = cartItems.value.filter(item => item.id !== id);
+    cart.value = cart.value.filter(item => item.id !== id);
   }
+
+  function updateItem(index, updatedItem) {
+    cart.value[index] = { ...cart.value[index], ...updatedItem };
+  }
+
+  const subtotal = computed(() => {
+    return cart.value.reduce((total, item) => total + item.price * item.quantity, 0).toFixed(2);
+  });
 </script>
 
 
@@ -36,7 +42,7 @@
   <SecondaryLayout>
     <div class="cart">
       <div class="left">
-        <CartCard v-for="item in cartItems" :key="item.id" v-bind="item" @remove="removeItem(item.id)" />
+        <CartCard v-for="(item, index) in cart" :key="item.id" v-bind="item" @remove="() => removeItem(item.id)" @update="updatedItem => updateItem(index, updatedItem)" />
 
         <div class="cart__buttons">
           <CustomButton class="cart__button">Clear shopping cart</CustomButton>
@@ -54,8 +60,8 @@
         </div>
 
         <div class="total__block">
-          <div class="subtotal__text">SUB TOTAL&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$900</div>
-          <div class="total__text">GRAND TOTAL&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span>$900</span></div>
+          <div class="subtotal__text">SUB TOTAL&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${{ subtotal }}</div>
+          <div class="total__text">GRAND TOTAL&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span>${{ subtotal }}</span></div>
           <hr>
           <CustomButton class="total__button">PROCEED TO CHECKOUT</CustomButton>
         </div>
