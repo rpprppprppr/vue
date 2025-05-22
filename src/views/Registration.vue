@@ -17,8 +17,8 @@
         </div>
 
         <div class="reg">
-          <CustomInput placeholder="Male" />
-          <CustomInput placeholder="Female" />
+          <label><input class="reg__radio" type="radio" name="" id="">Male</label>
+          <label><input class="reg__radio" type="radio" name="" id="">Female</label>
         </div>
 
         <div class="reg__block">
