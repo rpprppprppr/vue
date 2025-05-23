@@ -20,7 +20,7 @@
 
 <style scoped lang="scss">
   .subscribe {
-    background-image: url("src/assets/img/subscribe-background.png");
+    background-image: url("@/assets/img/subscribe-background.png");
     background-size: cover;
     background-position: calc(25%) center;
     background-repeat: no-repeat;

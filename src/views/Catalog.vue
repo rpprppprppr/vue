@@ -1,41 +1,41 @@
 <script setup>
-  import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
-  import { useApi } from "@/api/index.js";
-  
-  import Feature from "@/components/Feature.vue";
-  import SecondaryLayout from "@/layouts/Secondary.vue";
-  import ProductCard from "@/components/other/ProductCard.vue";
-  import Paginator from "@/components/other/Paginator.vue";
-  import FilterPanel from "@/components/other/FilterPanel.vue";
+  import { ref, computed, watch, onMounted } from 'vue'
+  import { storeToRefs } from 'pinia'
+  import { useWindowSize } from '@vueuse/core'
+
+  import { useCatalogStore } from '@/store/catalog.js'
+  import Feature from '@/components/Feature.vue'
+  import SecondaryLayout from '@/layouts/Secondary.vue'
+  import ProductCard from '@/components/other/ProductCard.vue'
+  import Paginator from '@/components/other/Paginator.vue'
+  import FilterPanel from '@/components/other/FilterPanel.vue'
 
   const currentPage = ref(1)
-  const windowWidth = ref(window.innerWidth)
-  const updateWidth = () => { windowWidth.value = window.innerWidth }
+  const { width } = useWindowSize()
 
-  const catalog = ref([]);
-  
-  onMounted(async () => {
-    window.addEventListener('resize', updateWidth);
+  const catalogStore = useCatalogStore()
+  const { getCatalog } = storeToRefs(catalogStore)
 
-    const { get } = useApi();
-
-    const catalogResponse = await get("fixtures/catalog.json");
-    catalog.value = catalogResponse.data.map(item => ({
-      title: item.title,
-      description: item.description,
-      price: item.price,
-      image: `img/catalog/${item.id}.png`
-    }));
-  });
-
-  onBeforeUnmount(() => { window.removeEventListener('resize', updateWidth) })
-
-  const cardsPerPage = computed(() => {
-    if (windowWidth.value >= 768 && windowWidth.value < 1600) return 8
-    return 9
+  onMounted(async () => { 
+    await catalogStore.readCatalog()
   })
 
-  const visibleProducts = computed(() => catalog.value.slice(0, cardsPerPage.value))
+  const cardsPerPage = computed(() => (width.value >= 768 && width.value < 1600 ? 8 : 9))
+  const totalPages = computed(() =>
+    Math.ceil(getCatalog.value.length / cardsPerPage.value)
+  )
+
+  const visibleProducts = computed(() => {
+    const start = (currentPage.value - 1) * cardsPerPage.value
+    return getCatalog.value.slice(start, start + cardsPerPage.value)
+  })
+
+  watch(currentPage, () => {
+    const element = document.querySelector('.catalog')
+    const offset = 80
+    const top = element ? element.offsetTop - offset : 0
+    window.scrollTo({ top, behavior: 'smooth' })
+  })
 </script>
 
 <template>
@@ -49,7 +49,7 @@
         <ProductCard v-for="(product, index) in visibleProducts" :key="index" v-bind="product" />
       </div>
 
-      <Paginator v-model="currentPage" :totalPages="20" />
+      <Paginator v-model="currentPage" :totalPages="totalPages" />
     </div>
     
     <Feature />

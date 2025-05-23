@@ -1,86 +1,89 @@
 <script setup>
-  import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
-  import { useApi } from "@/api/index.js";
+import { ref, computed, onMounted, watch } from 'vue'
+import { useRoute } from 'vue-router'
+import { storeToRefs } from 'pinia'
+import { useWindowSize } from '@vueuse/core'
 
-  import SecondaryLayout from "@/layouts/Secondary.vue";
-  import ProductCard from "@/components/other/ProductCard.vue";
-  import CustomSelect from "@/components/other/CustomSelect.vue";
-  import cartIcon from "@/assets/svg/cart-pink.svg";
-  import prevIcon from "@/assets/svg/prev-page.svg";
-  import nextIcon from "@/assets/svg/next-page.svg";
+import { useCatalogStore } from '@/store/catalog.js'
+import { useProductStore } from '@/store/product.js'
 
-  const color = ref('')
-  const size = ref('')
-  const quantity = ref('')
+import SecondaryLayout from "@/layouts/Secondary.vue"
+import CustomSelect from "@/components/other/CustomSelect.vue"
+import ProductCard from '@/components/other/ProductCard.vue'
 
-  const windowWidth = ref(window.innerWidth)
-  const updateWidth = () => { windowWidth.value = window.innerWidth }
+import cartIcon from "@/assets/svg/cart-pink.svg"
+import prevIcon from "@/assets/svg/prev-page.svg"
+import nextIcon from "@/assets/svg/next-page.svg"
 
-  const catalog = ref([]);
-  const productData = ref(null);
+const color = ref('')
+const size = ref('')
+const quantity = ref('')
 
-  const sliderImages = ref([]);
-  const currentSlide = ref(0);
+const { width } = useWindowSize()
+const route = useRoute()
 
-  const currentImage = computed(() => {
-    if (sliderImages.value.length === 0) return '';
-    return `img/slider/${sliderImages.value[currentSlide.value]}`;
-  });
+const catalogStore = useCatalogStore()
+const productStore = useProductStore()
 
-  const nextSlide = () => {
-    currentSlide.value = (currentSlide.value + 1) % sliderImages.value.length;
-  };
+const { getCatalog } = storeToRefs(catalogStore)
+const { product } = storeToRefs(productStore)
 
-  const prevSlide = () => {
-    currentSlide.value = (currentSlide.value - 1 + sliderImages.value.length) % sliderImages.value.length;
-  };
-  
-  onMounted(async () => {
-    window.addEventListener('resize', updateWidth) ;
+const sliderImages = ref([])
+const currentSlide = ref(0)
 
-    const { get } = useApi();
+const loadProduct = async (id) => {
+  await productStore.fetchProduct(id)
 
-    const responseProduct = await get("fixtures/product-slider.json");
-    const product = responseProduct.data[0];
-    productData.value = product;
+  const totalSlides = 3
+  sliderImages.value = Array.from({ length: totalSlides }, () => product.value.image)
+  currentSlide.value = 0
+}
 
-    // Предполагаем, что у продукта с id = 1 есть 3 изображения: 1-1.png, 1-2.png, 1-3.png
-    const totalSlides = 3;
-    sliderImages.value = Array.from({ length: totalSlides }, (_, i) => `${product.id}-${i + 1}.png`);
+onMounted(async () => {
+  const id = route.params.id
+  await loadProduct(id)
+  await catalogStore.readCatalog(3)
+})
 
-    const catalogResponse = await get("fixtures/product-catalog.json");
-    catalog.value = catalogResponse.data.map(item => ({
-      title: item.title,
-      description: item.description,
-      price: item.price,
-      image: `img/catalog/${item.id}.png`
-    }));
-  });
+watch(() => route.params.id, async (newId) => {
+  await loadProduct(newId)
+})
 
-  onBeforeUnmount(() => { window.removeEventListener('resize', updateWidth) })
+const cardsPerPage = computed(() => (width.value < 1600 ? 2 : 3))
+const visibleProducts = computed(() => getCatalog.value.slice(0, cardsPerPage.value))
 
-  const cardsPerPage = computed(() => {
-    if (windowWidth.value < 1600) return 2
-    return 3
-  })
+const currentImage = computed(() => {
+  if (sliderImages.value.length === 0) return ''
+  return sliderImages.value[currentSlide.value]
+})
 
-  const visibleProducts = computed(() => catalog.value.slice(0, cardsPerPage.value))
+const nextSlide = () => {
+  currentSlide.value = (currentSlide.value + 1) % sliderImages.value.length
+}
+
+const prevSlide = () => {
+  currentSlide.value = (currentSlide.value - 1 + sliderImages.value.length) % sliderImages.value.length
+}
 </script>
 
 <template>
   <SecondaryLayout>
-    <div class="product__container">
+    <div v-if="product" class="product__container">
       <div class="slider">
         <img :src="currentImage" class="product__image" />
-        <button class="slider__arrow left" @click="prevSlide"><img :src="prevIcon" alt="Предыдущее фото" /></button>
-        <button class="slider__arrow right" @click="nextSlide"><img :src="nextIcon" alt="Следующее фото" /></button>
+        <button class="slider__arrow left" @click="prevSlide">
+          <img :src="prevIcon" alt="Предыдущее фото" />
+        </button>
+        <button class="slider__arrow right" @click="nextSlide">
+          <img :src="nextIcon" alt="Следующее фото" />
+        </button>
       </div>
 
-      <div class="product__info" v-if="productData">
-        <div class="category">{{ productData.category }}</div>
-        <div class="product__title">{{ productData.title }}</div>
-        <div class="product__description">{{ productData.description }}</div>
-        <div class="product__price">{{ productData.price }}</div>
+      <div class="product__info">
+        <div class="category">{{ product.category }}</div>
+        <div class="product__title">{{ product.title }}</div>
+        <div class="product__description">{{ product.description }}</div>
+        <div class="product__price">${{ product.price }}</div>
 
         <div class="options">
           <CustomSelect v-model="color" title="CHOOSE COLOR" :options="['Black', 'White']" :multiple="false" :showSelectedInTitle="true"/>
@@ -92,10 +95,10 @@
           <img :src="cartIcon" alt="cart" width="26" /> Add to Cart
         </button>
       </div>
-    </div>
 
-    <div class="products">
-        <ProductCard v-for="(product, index) in visibleProducts" :key="index" v-bind="product" />
+      <div class="products">
+        <ProductCard v-for="(productItem, index) in visibleProducts" :key="index" v-bind="productItem" />
+      </div>
     </div>
   </SecondaryLayout>
 </template>
@@ -122,6 +125,8 @@
     display: block;
     margin-left: auto;
     margin-right: auto;
+    max-height: 700px;
+    transition: opacity 0.4s ease;
   }
 
   .slider__arrow {
@@ -161,6 +166,7 @@
 
     position: relative;
     padding-bottom: 15px;
+    text-transform: uppercase;
   }
 
   .category::after {

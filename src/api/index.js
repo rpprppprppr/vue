@@ -7,7 +7,7 @@ const DEFAULT_REQUEST_TIMEOUT = 10000;
 
 function getApi(config) {
     const instance = axios.create({
-        baseURL: `${import.meta.env.VITE_BASE_API_URL}`,
+        baseURL: `${import.meta.env.VITE_BASE_API_URL}/api/`,
         timeout: DEFAULT_REQUEST_TIMEOUT,
         paramsSerializer: (params) => 
             stringify(params, { arrayFormat: "repeat" }).replaceAll(/\+/g, "%20"),

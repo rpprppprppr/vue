@@ -1,35 +1,28 @@
 <script setup>
-  import { ref, onMounted } from "vue";
-  import { ROUTES } from "@/config/constants/routes.js";
-  import { useApi } from "@/api/index.js";
-  
-  import MainBanner from "@/components/MainBanner.vue";
-  import Feature from "@/components/Feature.vue";
-  import ProductCard from "@/components/other/ProductCard.vue";
-  import OfferBlock from "@/components/other/OfferBlock.vue";
-  import DefaultLayout from "@/layouts/Default.vue";
+  import { ref, onMounted, computed } from "vue"
+  import { storeToRefs } from 'pinia'
 
-  const catalog = ref([]);
-  const offers = ref([]);
-  
-  onMounted(async () => {
-    const { get } = useApi();
+  import { ROUTES } from "@/config/constants/routes.js"
+  import { useCatalogStore } from '@/store/catalog.js'
+  import MainBanner from "@/components/MainBanner.vue"
+  import Feature from "@/components/Feature.vue"
+  import ProductCard from "@/components/other/ProductCard.vue"
+  import OfferBlock from "@/components/other/OfferBlock.vue"
+  import DefaultLayout from "@/layouts/Default.vue"
 
-    const offerResponse = await get("fixtures/offer.json");
-    offers.value = offerResponse.data.map(item => ({
-      description: item.description,
-      category: item.category,
-      image: `img/offer/${item.id}.png`
-    }));
+  const offers = [
+    { description: "30% OFF", category: "FOR WOMEN", image: "src/assets/img/offer/1.png" },
+    { description: "HOT DEAL", category: "FOR MEN", image: "src/assets/img/offer/2.png" },
+    { description: "NEW ARRIVALS", category: "FOR KIDS", image: "src/assets/img/offer/3.png" },
+    { description: "LUXURIOUS & TRENDY", category: "ACCESSORIES", image: "src/assets/img/offer/4.png" },
+  ]
 
-    const catalogResponse = await get("fixtures/home-catalog.json");
-    catalog.value = catalogResponse.data.map(item => ({
-      title: item.title,
-      description: item.description,
-      price: item.price,
-      image: `img/catalog/${item.id}.png`
-    }));
-  });
+  const catalogStore = useCatalogStore()
+  const { getCatalog } = storeToRefs(catalogStore)
+
+  onMounted(async () => { 
+    await catalogStore.readCatalog(6)
+  })
 </script>
 
 <template>
@@ -43,7 +36,7 @@
       <div class="block__title">Fetured Items</div>
       <div class="block__subtitle">Shop for items based on what we featured in this week</div>
       <div class="products__block">
-        <ProductCard v-for="(product, index) in catalog" :key="index" v-bind="product" />
+        <ProductCard v-for="(product, index) in getCatalog" :key="index" v-bind="product" />
       </div>
       <RouterLink :to="{ name: ROUTES.CATALOG }">
         <button class="block__button">Browse All Product</button>
