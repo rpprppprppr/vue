@@ -1,46 +1,75 @@
 <script setup>
-  import { ref, onMounted, onBeforeUnmount } from 'vue'
-  import CustomSelect from "@/components/other/CustomSelect.vue"
-  import filterIcon from "@/assets/svg/burger.svg"
+  import { ref, watch, computed } from 'vue'
+  import { useCatalogStore } from '@/store/catalog.js'
+  import CustomSelect from '@/components/other/CustomSelect.vue'
+  import filterIcon from '@/assets/svg/burger.svg'
+
+  const catalogStore = useCatalogStore()
 
   const activeMenu = ref(null)
   const showCategoriesSection = ref(true)
-  const showBrandSection = ref(false)
-  const showDesignerSection = ref(false)
-
-  const selectedTrending = ref([])
-  const selectedSizes = ref([])
-  const selectedPrices = ref([])
-
-  const categoriesItems = [
-    "Accessories", "Bags", "Denim", "Hoodies & Sweatshirts", 
-    "Jackets & Coats", "Polos", "Shirts", "Shoes", 
-    "Sweaters & Knits", "T-Shirts", "Tanks"
-  ]
-
-  const filterPanelRef = ref(null)
 
   const toggleMenu = (menuName) => {
     activeMenu.value = activeMenu.value === menuName ? null : menuName
   }
 
-  const handleClickOutside = (event) => {
-    if (!filterPanelRef.value?.contains(event.target)) {
-        activeMenu.value = null
+  const categoriesItems = computed(() => catalogStore.categories)
+  const selectedCategories = computed({
+    get: () => catalogStore.filters.categories,
+    set: (val) => catalogStore.setCategories(val),
+  })
+
+  const priceBounds = computed(() => catalogStore.priceBounds)
+  const dynamicPriceOptions = computed(() => {
+    const min = priceBounds.value.min
+    const max = priceBounds.value.max
+    if (min === max) return []
+    const step = (max - min) / 3
+    return [
+      { label: 'All prices', value: null },
+      { label: `$${min.toFixed(0)} - $${(min + step).toFixed(0)}`, value: { min, max: min + step } },
+      { label: `$${(min + step).toFixed(0)} - $${(min + 2 * step).toFixed(0)}`, value: { min: min + step, max: min + 2 * step } },
+      { label: `$${(min + 2 * step).toFixed(0)} - $${max.toFixed(0)}`, value: { min: min + 2 * step, max } },
+    ]
+  })
+
+  const selectedPriceLabel = ref('All prices')
+
+  watch(
+    () => catalogStore.filters.priceRange,
+    (newRange) => {
+      if (!newRange) {
+        selectedPriceLabel.value = 'All prices'
+        return
+      }
+      const found = dynamicPriceOptions.value.find(opt =>
+        opt.value && newRange.min === opt.value.min && newRange.max === opt.value.max
+      )
+      selectedPriceLabel.value = found ? found.label : ''
+    },
+    { immediate: true }
+  )
+
+  watch(selectedPriceLabel, (newLabel) => {
+    const found = dynamicPriceOptions.value.find(opt => opt.label === newLabel)
+    if (found) {
+      catalogStore.setPriceRange(found.value)
+    } else {
+      catalogStore.setPriceRange(null)
+    }
+  })
+
+  function toggleCategory(item) {
+    if (selectedCategories.value.includes(item)) {
+      selectedCategories.value = selectedCategories.value.filter(c => c !== item)
+    } else {
+      selectedCategories.value = [...selectedCategories.value, item]
     }
   }
-
-  onMounted(() => {
-    document.addEventListener('click', handleClickOutside)
-  })
-
-  onBeforeUnmount(() => {
-    document.removeEventListener('click', handleClickOutside)
-  })
 </script>
 
 <template>
-  <div class="filter__panel" ref="filterPanelRef">
+  <div class="filter__panel">
     <div class="filter">
       <div class="filter__left">
         <div class="filter__name" @click="toggleMenu('category')">
@@ -50,34 +79,18 @@
           <div class="filter__section">
             <div class="filter__title" @click="showCategoriesSection = !showCategoriesSection">CATEGORY</div>
             <div v-show="showCategoriesSection" class="items__list">
-              <div v-for="item in categoriesItems" :key="item">{{ item }}</div>
-            </div>
-          </div>
-
-          <div class="filter__section">
-            <div class="filter__title" @click="showBrandSection = !showBrandSection">BRAND</div>
-            <div v-show="showBrandSection" class="items__list">
-              <div>Brand 1</div>
-              <div>Brand 2</div>
-            </div>
-          </div>
-
-          <div class="filter__section">
-            <div class="filter__title" @click="showDesignerSection = !showDesignerSection">DESIGNER</div>
-            <div v-show="showDesignerSection" class="items__list">
-              <div>Designer 1</div>
-              <div>Designer 2</div>
+              <div v-for="item in categoriesItems" :key="item" :class="{ selected: selectedCategories.includes(item) }" class="category-item" @click="toggleCategory(item)" >
+                {{ item }}
+              </div>
+              <div class="category-item clear" @click="selectedCategories = []" :class="{ selected: selectedCategories.length === 0 }" > All categories </div>
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="filter__right">
-      <CustomSelect title="TRENDING NOW" :options="['Trend 1', 'Trend 2']" v-model="selectedTrending" :multiple="true"/>
-      <CustomSelect title="SIZE" :options="['XS', 'S', 'M', 'L']" v-model="selectedSizes" :multiple="true"/>
-      <CustomSelect title="PRICE" :options="['$0-50', '$51-100', '$101-200']" v-model="selectedPrices" :multiple="false"/>
-    </div>
+    <CustomSelect title="PRICE" :options="dynamicPriceOptions.map(opt => opt.label)" v-model="selectedPriceLabel" :multiple="false" />
+    <span v-if="selectedPriceLabel" style="margin-left: 10px;"> {{ selectedPriceLabel }}</span>
   </div>
 </template>  
 
@@ -90,12 +103,6 @@
 
   .filter__left {
     margin-right: 300px;
-  }
-
-  .filter__right {
-    display: flex;
-    flex-direction: row;
-    gap: 30px;
   }
 
   .filter {
@@ -152,8 +159,36 @@
   .items__list {
     display: flex;
     flex-direction: column;
+    text-transform: uppercase;
     gap: 10px;
     padding: 24px 16px;
+  }
+
+  .category-item {
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+  }
+
+  .category-item:hover {
+      background-color: #f5f5f5;
+  }
+
+  .category-item.selected {
+    background-color: #F16D7F;
+    color: white;
+    font-weight: 600;
+  }
+
+  .category-item.clear {
+    color: #999;
+  }
+
+  .category-item.clear.selected {
+    background-color: #f0f0f0;
+    color: #333;
+    font-weight: normal;
   }
 
   @media screen and (max-width: 1599px) {
@@ -166,10 +201,6 @@
   }
 
   @media screen and (max-width: 767px) {
-    .filter__right {
-      gap: 24px;
-    }
-
     .filter__label {
       display: none;
     }
