@@ -1,7 +1,8 @@
 <script setup>
   import { computed, onMounted, watch } from 'vue'
-  import { storeToRefs } from 'pinia'
   import { useWindowSize } from '@vueuse/core'
+  import { onBeforeRouteLeave } from 'vue-router'
+  import { storeToRefs } from 'pinia'
 
   import { useCatalogStore } from '@/store/catalog.js'
   import Feature from '@/components/Feature.vue'
@@ -22,6 +23,13 @@
 
   onMounted(async () => {
     await catalogStore.updateLimitByWidth(width.value)
+  })
+
+  onBeforeRouteLeave((to, from, next) => {
+    if (to.path !== '/catalog') {
+      catalogStore.setPage(1)
+    }
+    next()
   })
 
   watch(width, async (newWidth) => {
