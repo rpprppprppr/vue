@@ -32,7 +32,7 @@
   const currentSlide = ref(0)
 
   const loadProduct = async (id) => {
-    await productStore.fetchProduct(id)
+    await productStore.getProduct(id)
 
     const totalSlides = 3
     sliderImages.value = Array.from({ length: totalSlides }, () => product.value.image)

@@ -7,7 +7,7 @@ export const useProductStore = defineStore('product', () => {
         const { get } = useApi()
         const product = ref(null)
 
-        const fetchProduct = async (id) => {
+        const getProduct = async (id) => {
         const productResponse = await get(`/products/${id}`)
         const p = productResponse.data
 
@@ -23,6 +23,6 @@ export const useProductStore = defineStore('product', () => {
 
     return {
         product,
-        fetchProduct,
+        getProduct,
     }
 })
