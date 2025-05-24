@@ -1,5 +1,5 @@
 <script setup>
-  import { ref, computed, watch, onMounted } from 'vue'
+  import { computed, onMounted, watch } from 'vue'
   import { storeToRefs } from 'pinia'
   import { useWindowSize } from '@vueuse/core'
 
@@ -10,24 +10,22 @@
   import Paginator from '@/components/other/Paginator.vue'
   import FilterPanel from '@/components/other/FilterPanel.vue'
 
-  const currentPage = ref(1)
   const { width } = useWindowSize()
 
   const catalogStore = useCatalogStore()
-  const { getCatalog } = storeToRefs(catalogStore)
+  const { paginatedProducts, totalPages, pagination } = storeToRefs(catalogStore)
 
-  onMounted(async () => { 
-    await catalogStore.readCatalog()
+  const currentPage = computed({
+    get: () => pagination.value.page,
+    set: (val) => catalogStore.setPage(val),
   })
 
-  const cardsPerPage = computed(() => (width.value >= 768 && width.value < 1600 ? 8 : 9))
-  const totalPages = computed(() =>
-    Math.ceil(getCatalog.value.length / cardsPerPage.value)
-  )
+  onMounted(async () => {
+    await catalogStore.updateLimitByWidth(width.value)
+  })
 
-  const visibleProducts = computed(() => {
-    const start = (currentPage.value - 1) * cardsPerPage.value
-    return getCatalog.value.slice(start, start + cardsPerPage.value)
+  watch(width, async (newWidth) => {
+    await catalogStore.updateLimitByWidth(newWidth)
   })
 
   watch(currentPage, () => {
@@ -46,12 +44,12 @@
       </div>
 
       <div class="products">
-        <ProductCard v-for="(product, index) in visibleProducts" :key="index" v-bind="product" />
+        <ProductCard v-for="(product, index) in paginatedProducts" :key="index" v-bind="product" />
       </div>
 
       <Paginator v-model="currentPage" :totalPages="totalPages" />
     </div>
-    
+
     <Feature />
   </SecondaryLayout>
 </template>

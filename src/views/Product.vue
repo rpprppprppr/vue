@@ -1,69 +1,69 @@
 <script setup>
-import { ref, computed, onMounted, watch } from 'vue'
-import { useRoute } from 'vue-router'
-import { storeToRefs } from 'pinia'
-import { useWindowSize } from '@vueuse/core'
+  import { ref, computed, onMounted, watch } from 'vue'
+  import { useRoute } from 'vue-router'
+  import { storeToRefs } from 'pinia'
+  import { useWindowSize } from '@vueuse/core'
 
-import { useCatalogStore } from '@/store/catalog.js'
-import { useProductStore } from '@/store/product.js'
+  import { useCatalogStore } from '@/store/catalog.js'
+  import { useProductStore } from '@/store/product.js'
 
-import SecondaryLayout from "@/layouts/Secondary.vue"
-import CustomSelect from "@/components/other/CustomSelect.vue"
-import ProductCard from '@/components/other/ProductCard.vue'
+  import SecondaryLayout from "@/layouts/Secondary.vue"
+  import CustomSelect from "@/components/other/CustomSelect.vue"
+  import ProductCard from '@/components/other/ProductCard.vue'
 
-import cartIcon from "@/assets/svg/cart-pink.svg"
-import prevIcon from "@/assets/svg/prev-page.svg"
-import nextIcon from "@/assets/svg/next-page.svg"
+  import cartIcon from "@/assets/svg/cart-pink.svg"
+  import prevIcon from "@/assets/svg/prev-page.svg"
+  import nextIcon from "@/assets/svg/next-page.svg"
 
-const color = ref('')
-const size = ref('')
-const quantity = ref('')
+  const color = ref('')
+  const size = ref('')
+  const quantity = ref('')
 
-const { width } = useWindowSize()
-const route = useRoute()
+  const { width } = useWindowSize()
+  const route = useRoute()
 
-const catalogStore = useCatalogStore()
-const productStore = useProductStore()
+  const catalogStore = useCatalogStore()
+  const productStore = useProductStore()
 
-const { getCatalog } = storeToRefs(catalogStore)
-const { product } = storeToRefs(productStore)
+  const { getCatalog } = storeToRefs(catalogStore)
+  const { product } = storeToRefs(productStore)
 
-const sliderImages = ref([])
-const currentSlide = ref(0)
+  const sliderImages = ref([])
+  const currentSlide = ref(0)
 
-const loadProduct = async (id) => {
-  await productStore.fetchProduct(id)
+  const loadProduct = async (id) => {
+    await productStore.fetchProduct(id)
 
-  const totalSlides = 3
-  sliderImages.value = Array.from({ length: totalSlides }, () => product.value.image)
-  currentSlide.value = 0
-}
+    const totalSlides = 3
+    sliderImages.value = Array.from({ length: totalSlides }, () => product.value.image)
+    currentSlide.value = 0
+  }
 
-onMounted(async () => {
-  const id = route.params.id
-  await loadProduct(id)
-  await catalogStore.readCatalog(3)
-})
+  onMounted(async () => {
+    const id = route.params.id
+    await loadProduct(id)
+    await catalogStore.readCatalog(3)
+  })
 
-watch(() => route.params.id, async (newId) => {
-  await loadProduct(newId)
-})
+  watch(() => route.params.id, async (newId) => {
+    await loadProduct(newId)
+  })
 
-const cardsPerPage = computed(() => (width.value < 1600 ? 2 : 3))
-const visibleProducts = computed(() => getCatalog.value.slice(0, cardsPerPage.value))
+  const cardsPerPage = computed(() => (width.value < 1600 ? 2 : 3))
+  const visibleProducts = computed(() => getCatalog.value.slice(0, cardsPerPage.value))
 
-const currentImage = computed(() => {
-  if (sliderImages.value.length === 0) return ''
-  return sliderImages.value[currentSlide.value]
-})
+  const currentImage = computed(() => {
+    if (sliderImages.value.length === 0) return ''
+    return sliderImages.value[currentSlide.value]
+  })
 
-const nextSlide = () => {
-  currentSlide.value = (currentSlide.value + 1) % sliderImages.value.length
-}
+  const nextSlide = () => {
+    currentSlide.value = (currentSlide.value + 1) % sliderImages.value.length
+  }
 
-const prevSlide = () => {
-  currentSlide.value = (currentSlide.value - 1 + sliderImages.value.length) % sliderImages.value.length
-}
+  const prevSlide = () => {
+    currentSlide.value = (currentSlide.value - 1 + sliderImages.value.length) % sliderImages.value.length
+  }
 </script>
 
 <template>
