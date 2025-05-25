@@ -6,6 +6,7 @@
 
   import { useCatalogStore } from '@/store/catalog.js'
   import { useProductStore } from '@/store/product.js'
+  import { useCartStore } from '@/store/cart.js'
 
   import SecondaryLayout from "@/layouts/Secondary.vue"
   import CustomSelect from "@/components/other/CustomSelect.vue"
@@ -24,6 +25,7 @@
 
   const catalogStore = useCatalogStore()
   const productStore = useProductStore()
+  const cartStore = useCartStore()
 
   const { getCatalog } = storeToRefs(catalogStore)
   const { product } = storeToRefs(productStore)
@@ -48,6 +50,30 @@
   watch(() => route.params.id, async (newId) => {
     await loadProduct(newId)
   })
+
+  const addToCart = () => {
+    if (!color.value || !size.value || !quantity.value) {
+      alert("Please select color, size and quantity");
+      return
+    }
+
+    const productToAdd = {
+      productId: product.value.id,
+      title: product.value.title,
+      price: product.value.price,
+      color: color.value,
+      size: size.value,
+      quantity: parseInt(quantity.value),
+      image: product.value.image,
+    }
+
+    if (cartStore.cart && cartStore.cart.products) {
+      const updatedProducts = [...cartStore.cart.products, productToAdd]
+      cartStore.updateCart(cartStore.cart.id, { ...cartStore.cart, products: updatedProducts })
+    } else {
+      cartStore.createCart({ products: [productToAdd] })
+    }
+  }
 
   const cardsPerPage = computed(() => (width.value < 1600 ? 2 : 3))
   const visibleProducts = computed(() => getCatalog.value.slice(0, cardsPerPage.value))
@@ -91,7 +117,7 @@
           <CustomSelect v-model="quantity" title="QUANTITY" :options="['1', '2', '3']" :multiple="false" :showSelectedInTitle="true"/>
         </div>
 
-        <button class="product__button">
+        <button class="product__button" @click="addToCart" :disabled="!color || !size || !quantity" >
           <img :src="cartIcon" alt="cart" width="26" /> Add to Cart
         </button>
       </div>
@@ -232,6 +258,12 @@
 
   .product__button:hover {
     background-color: #f1d5d8;
+  }
+
+  .product__button:disabled {
+    background-color: #e9e9e9;
+    border: 1px solid #8b8b8b;
+    cursor: initial;
   }
 
   .products {

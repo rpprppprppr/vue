@@ -21,8 +21,22 @@ export const useProductStore = defineStore('product', () => {
         }
     }
 
+    const fetchProduct = async (id) => {
+        const res = await get(`/products/${id}`)
+        const p = res.data
+        return {
+            id: p.id,
+            title: p.title,
+            description: p.description,
+            price: parseFloat(p.price).toFixed(2),
+            image: p.image,
+            category: p.category,
+        }
+    }
+
     return {
         product,
         getProduct,
+        fetchProduct
     }
 })

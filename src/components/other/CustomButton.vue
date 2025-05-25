@@ -25,4 +25,9 @@
   .custom__button:hover {
     background-color: #b8606b;
   }
+
+  .custom__button:disabled {
+    color: white;
+    background-color: #888888;
+  }
 </style>

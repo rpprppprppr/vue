@@ -1,62 +1,101 @@
 <script setup>
-  import { ref, computed, onMounted } from 'vue'
-  import { useApi } from "@/api/index.js";
+  import { ref, computed, onMounted, watch } from 'vue'
 
-  import SecondaryLayout from "@/layouts/Secondary.vue";
+  import { useUserStore } from '@/store/user.js'
+  import { useCartStore } from '@/store/cart.js'
+  import { ROUTES } from "@/config/constants/routes.js"
+  import SecondaryLayout from "@/layouts/Secondary.vue"
   import CustomInput from "@/components/other/CustomInput.vue";
   import CustomButton from "@/components/other/CustomButton.vue";
   import CartCard from "@/components/other/CartCard.vue";
 
-  const cart = ref([]);
-  
+  const userStore = useUserStore()
+  const cartStore = useCartStore()
+
+  const city = ref('')
+  const street = ref('')
+  const zipcode = ref('')
+  const isDisabled = computed(() => !!userStore.selectedUserId)
+
   onMounted(async () => {
-    const { get } = useApi();
+    if (userStore.selectedUserId) {
+      await cartStore.getCart(userStore.selectedUserId)
+    }
+  })
 
-    const cartResponse = await get("fixtures/cart.json");
-    cart.value = cartResponse.data.map(item => ({
-      id: item.id,
-      title: item.title,
-      price: item.price,
-      color: item.color,
-      size: item.size,
-      quantity: item.quantity,
-      image: `img/catalog/${item.id}.png`
-    }));
-  });
+  watch(() => userStore.selectedUserId, async (newUserId) => {
+    cartStore.cart = null
 
-  function removeItem(id) {
-    cart.value = cart.value.filter(item => item.id !== id);
+    if (newUserId) {
+      await cartStore.getCart(newUserId)
+    }
+  })
+
+  watch(
+    () => userStore.user?.address,
+    (address) => {
+      city.value = address?.city ?? ''
+      street.value = address?.street ?? ''
+      zipcode.value = address?.zipcode ?? ''
+    },
+    { immediate: true }
+  )
+
+  const cart = computed(() => cartStore.cart?.products ?? [])
+
+  const subtotal = computed(() =>
+    cart.value.reduce((total, item) => total + item.price * item.quantity, 0).toFixed(2)
+  )
+
+  const removeItem = (id) => {
+    const updatedProducts = cart.value.filter(item => item.productId !== id)
+    cartStore.updateCart(cartStore.cart.id, { ...cartStore.cart, products: updatedProducts })
   }
 
-  function updateItem(index, updatedItem) {
-    cart.value[index] = { ...cart.value[index], ...updatedItem };
+  const updateItem = (index, updatedItem) => {
+    const updatedProducts = [...cart.value]
+    updatedProducts[index] = { ...updatedProducts[index], ...updatedItem }
+    cartStore.updateCart(cartStore.cart.id, { ...cartStore.cart, products: updatedProducts })
   }
 
-  const subtotal = computed(() => {
-    return cart.value.reduce((total, item) => total + item.price * item.quantity, 0).toFixed(2);
-  });
+  const clearCart = () => {
+    cartStore.deleteCart(cartStore.cart.id)
+  }
 </script>
-
 
 <template>
   <SecondaryLayout>
     <div class="cart">
       <div class="left">
-        <CartCard v-for="(item, index) in cart" :key="item.id" v-bind="item" @remove="() => removeItem(item.id)" @update="updatedItem => updateItem(index, updatedItem)" />
+        <CartCard
+          v-for="(item, index) in cart"
+          :key="item.productId"
+          :id="item.productId"
+          :title="item.title"
+          :price="item.price"
+          :color="item.color"
+          :size="item.size"
+          :quantity="item.quantity"
+          :image="item.image"
+          @remove="() => removeItem(item.productId)"
+          @update="updatedItem => updateItem(index, updatedItem)"
+        />
 
         <div class="cart__buttons">
-          <CustomButton class="cart__button">Clear shopping cart</CustomButton>
-          <CustomButton class="cart__button">Continue shopping</CustomButton>
+          <CustomButton class="cart__button" @click="clearCart">Clear shopping cart</CustomButton>
+          <RouterLink :to="{ name: ROUTES.CATALOG }">
+            <CustomButton class="cart__button">Continue shopping</CustomButton>
+          </RouterLink>
         </div>
       </div>
 
       <div class="right">
         <div class="adress__block">
           <div class="adress__input-label">SHIPPING ADRESS</div>
-          <CustomInput placeholder="Bangladesh" />
-          <CustomInput placeholder="State" />
-          <CustomInput placeholder="Postcode / Zip" />
-          <CustomButton class="adress__button">Get a quote</CustomButton>
+          <CustomInput v-model="city" placeholder="City" :disabled="isDisabled" />
+          <CustomInput v-model="street" placeholder="Street" :disabled="isDisabled" />
+          <CustomInput v-model="zipcode" placeholder="Postcode / Zip" :disabled="isDisabled" />
+          <CustomButton class="adress__button" :disabled="isDisabled">Get a quote</CustomButton>
         </div>
 
         <div class="total__block">

@@ -97,7 +97,7 @@
           Please use 8 or more characters, with at least 1 number and a mixture of uppercase and lowercase letters
         </div>
 
-        <CustomButton @click="submit">
+        <CustomButton @click="submit" :disabled="isDisabled">
           JOIN NOW <img :src="arrowIcon" />
         </CustomButton>
       </div>

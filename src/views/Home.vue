@@ -1,5 +1,5 @@
 <script setup>
-  import { ref, onMounted, computed } from "vue"
+  import { onMounted } from "vue"
   import { storeToRefs } from 'pinia'
 
   import { ROUTES } from "@/config/constants/routes.js"

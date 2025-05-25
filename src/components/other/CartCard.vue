@@ -74,14 +74,21 @@
     display: flex;
     flex-direction: column;
     font-size: 22px;
-    max-width: 200px;
+    max-width: 250px;
     color: #575757;
   }
 
   .card__title {
     color: #222222;
-    font-size: 24px;
-    margin-bottom: 36px;
+    font-size: 22px;
+    margin-bottom: 30px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-height: 2.8em;
+    line-height: 1.4em; 
   }
 
   .price {
