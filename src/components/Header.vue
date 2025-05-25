@@ -1,6 +1,8 @@
 <script setup>
   import { ref } from "vue";
+
   import Menu from "@/components/Menu.vue";
+  import UserSelect from '@/components/other/UserSelect.vue'
   import { ROUTES } from "@/config/constants/routes.js";
   import logo from "@/assets/svg/logo.svg";
   import searchIcon from "@/assets/svg/search.svg";
@@ -28,6 +30,7 @@
       </RouterLink>
     </div>
     <div class="right">
+      <UserSelect />
       <div class="header__icon" @click="openMenu">
         <img :src="menuIcon" alt="Меню" style="margin-top: 5px;"/>
       </div>

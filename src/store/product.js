@@ -4,10 +4,10 @@ import { defineStore } from 'pinia'
 import { useApi } from '@/api/index.js'
 
 export const useProductStore = defineStore('product', () => {
-        const { get } = useApi()
-        const product = ref(null)
+    const { get } = useApi()
+    const product = ref(null)
 
-        const getProduct = async (id) => {
+    const getProduct = async (id) => {
         const productResponse = await get(`/products/${id}`)
         const p = productResponse.data
 

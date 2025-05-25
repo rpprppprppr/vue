@@ -1,18 +1,30 @@
 <script setup>
-  defineProps({
+  import { defineEmits, defineProps } from 'vue'
+
+  const props = defineProps({
+    modelValue: String,
     placeholder: String,
     name: String,
-    id: String
-  });
+    id: String,
+    disabled: Boolean
+  })
+
+  const emit = defineEmits(['update:modelValue'])
+
+  function onInput(event) {
+    emit('update:modelValue', event.target.value)
+  }
 </script>
 
 <template>
-  <input
-    type="text"
+  <input type="text"
     class="custom__input"
-    :placeholder="placeholder"
-    :name="name"
-    :id="id"
+    :placeholder="props.placeholder"
+    :name="props.name"
+    :id="props.id"
+    :disabled="props.disabled"
+    :value="props.modelValue"
+    @input="onInput"
   />
 </template>
 
@@ -23,5 +35,10 @@
 
     color: #B1B1B1;
     font-size: 13px;
+  }
+
+  .custom__input:disabled {
+    border: solid 1px #aaaaaa;
+    background-color: #e2e2e2;
   }
 </style>
