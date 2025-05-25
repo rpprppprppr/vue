@@ -22,7 +22,12 @@
   })
 
   onMounted(async () => {
-    await catalogStore.updateLimitByWidth(width.value)
+    await catalogStore.readCatalog()
+    catalogStore.updateLimitByWidth(width.value)
+  })
+
+  watch(width, (newWidth) => {
+    catalogStore.updateLimitByWidth(newWidth)
   })
 
   onBeforeRouteLeave((to, from, next) => {
@@ -30,10 +35,6 @@
       catalogStore.setPage(1)
     }
     next()
-  })
-
-  watch(width, async (newWidth) => {
-    await catalogStore.updateLimitByWidth(newWidth)
   })
 
   watch(currentPage, () => {

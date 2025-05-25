@@ -26,8 +26,8 @@ export const useCartStore = defineStore('cart', () => {
                     title: p.title,
                     price: p.price,
                     image: p.image,
-                    color: '---',
-                    size: '---'
+                    color: item.color || '---',
+                    size: item.size || '---',
                 }
             })
         )
@@ -36,7 +36,7 @@ export const useCartStore = defineStore('cart', () => {
             id: cartData.id,
             userId: cartData.userId,
             date: cartData.date,
-            products: enrichedProducts
+            products: enrichedProducts,
         }
     }
 
@@ -46,8 +46,8 @@ export const useCartStore = defineStore('cart', () => {
     }
 
     const updateCart = async (id, updatedCart) => {
-        await api.put(`carts/${id}`, updatedCart)
-        cart.value = updatedCart
+        const res = await api.put(`carts/${id}`, updatedCart)
+        cart.value = res.data 
     }
 
     const deleteCart = async (id) => {
@@ -55,11 +55,33 @@ export const useCartStore = defineStore('cart', () => {
         cart.value = { id: null, userId: null, products: [] }
     }
 
+    const addToCart = async (productToAdd) => {
+        if (cart.value && cart.value.products) {
+            const existingIndex = cart.value.products.findIndex(p =>
+                p.productId === productToAdd.productId &&
+                p.color === productToAdd.color &&
+                p.size === productToAdd.size
+            )
+            let updatedProducts
+            if (existingIndex !== -1) {
+                updatedProducts = [...cart.value.products]
+                updatedProducts[existingIndex].quantity += productToAdd.quantity
+            } else {
+                updatedProducts = [...cart.value.products, productToAdd]
+            }
+
+            await updateCart(cart.value.id, { ...cart.value, products: updatedProducts })
+        } else {
+            await createCart({ userId: cart.value?.userId || null, products: [productToAdd] })
+        }
+    }
+
     return {
         cart,
         getCart,
         createCart,
         updateCart,
-        deleteCart
+        deleteCart,
+        addToCart,
     }
 })

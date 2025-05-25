@@ -10,7 +10,7 @@ export const useCatalogStore = defineStore('catalog', () => {
     
     const filters = ref({
         categories: [],
-        priceRange: null,
+        priceRange: { min: 0, max: 0 },
     })
     
     const categories = computed(() => {
@@ -20,18 +20,24 @@ export const useCatalogStore = defineStore('catalog', () => {
     
     const priceBounds = computed(() => {
         if (allProducts.value.length === 0) return { min: 0, max: 0 }
-        const prices = allProducts.value.map(p => p.price)
+        const prices = allProducts.value.map(p => +p.price)
         return { min: Math.min(...prices), max: Math.max(...prices) }
     })
-    
+
+    const readCatalog = async () => {
+        const response = await get('/products')
+        allProducts.value = response.data
+
+        const bounds = priceBounds.value
+        filters.value.priceRange = { min: bounds.min, max: bounds.max }
+    }
+
     const filteredProducts = computed(() => {
         return allProducts.value.filter(product => {
             const categoryMatch = filters.value.categories.length > 0
                 ? filters.value.categories.includes(product.category)
                 : true
-            const priceMatch = filters.value.priceRange
-                ? product.price >= filters.value.priceRange.min && product.price <= filters.value.priceRange.max
-                : true
+            const priceMatch = product.price >= filters.value.priceRange.min && product.price <= filters.value.priceRange.max
             return categoryMatch && priceMatch
         })
     })
@@ -50,56 +56,35 @@ export const useCatalogStore = defineStore('catalog', () => {
         return Math.ceil(filteredProducts.value.length / pagination.value.limit)
     })
 
-    const updateLimitByWidth = async (width) => {
+    const updateLimitByWidth = (width) => {
         pagination.value.limit = width >= 768 && width < 1600 ? 8 : 9
-        await readCatalog()
-    }
-
-    const readCatalog = async () => {
-        const response = await get('/products')
-        allProducts.value = response.data
-    }
-
-    const getCatalog = computed(() => allProducts.value)
-
-    watch(() => filters.value.categories, async () => {
         pagination.value.page = 1
-        await readCatalog()
-    }, { immediate: true })
+    }
+    
+    watch(() => filters.value.categories, () => {
+        pagination.value.page = 1
+    })
 
     watch(() => filters.value.priceRange, () => {
         pagination.value.page = 1
     })
 
-    const setPage = (newPage) => {
-        pagination.value.page = newPage
-    }
-
-    const setCategories = (categories) => {
-        filters.value.categories = categories
-    }
-
-    const setPriceRange = (range) => {
-        filters.value.priceRange = range
-    }
-
     return {
-        // Основные методы стора
-        getCatalog,
-        readCatalog,
-
-        // Filter
+        allProducts,
         categories,
         priceBounds,
         filters,
-        setCategories,
-        setPriceRange,
-
-        // Pagination
-        paginatedProducts,
-        updateLimitByWidth,
-        totalPages,
         pagination,
-        setPage,
+
+        getCatalog: allProducts,
+        filteredProducts,
+        paginatedProducts,
+        totalPages,
+
+        readCatalog,
+        updateLimitByWidth,
+        setCategories: (categories) => { filters.value.categories = categories },
+        setPriceRange: (range) => { filters.value.priceRange = range },
+        setPage: (page) => { pagination.value.page = page },
     }
 })

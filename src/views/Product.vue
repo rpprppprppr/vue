@@ -51,9 +51,9 @@
     await loadProduct(newId)
   })
 
-  const addToCart = () => {
+  const addToCart = async () => {
     if (!color.value || !size.value || !quantity.value) {
-      alert("Please select color, size and quantity");
+      alert("Please select color, size and quantity")
       return
     }
 
@@ -67,12 +67,7 @@
       image: product.value.image,
     }
 
-    if (cartStore.cart && cartStore.cart.products) {
-      const updatedProducts = [...cartStore.cart.products, productToAdd]
-      cartStore.updateCart(cartStore.cart.id, { ...cartStore.cart, products: updatedProducts })
-    } else {
-      cartStore.createCart({ products: [productToAdd] })
-    }
+    await cartStore.addToCart(productToAdd)
   }
 
   const cardsPerPage = computed(() => (width.value < 1600 ? 2 : 3))

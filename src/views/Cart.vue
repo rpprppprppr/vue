@@ -5,9 +5,10 @@
   import { useCartStore } from '@/store/cart.js'
   import { ROUTES } from "@/config/constants/routes.js"
   import SecondaryLayout from "@/layouts/Secondary.vue"
-  import CustomInput from "@/components/other/CustomInput.vue";
-  import CustomButton from "@/components/other/CustomButton.vue";
-  import CartCard from "@/components/other/CartCard.vue";
+  import CustomInput from "@/components/other/CustomInput.vue"
+  import CustomButton from "@/components/other/CustomButton.vue"
+  import CartCard from "@/components/other/CartCard.vue"
+  import { RouterLink } from 'vue-router'
 
   const userStore = useUserStore()
   const cartStore = useCartStore()
@@ -15,7 +16,13 @@
   const city = ref('')
   const street = ref('')
   const zipcode = ref('')
+
   const isDisabled = computed(() => !!userStore.selectedUserId)
+  const cart = computed(() => cartStore.cart?.products ?? [])
+
+  const subtotal = computed(() =>
+    cart.value.reduce((total, item) => total + item.price * item.quantity, 0).toFixed(2)
+  )
 
   onMounted(async () => {
     if (userStore.selectedUserId) {
@@ -23,13 +30,16 @@
     }
   })
 
-  watch(() => userStore.selectedUserId, async (newUserId) => {
-    cartStore.cart = null
+  watch(
+    () => userStore.selectedUserId,
+    async (newUserId) => {
+      cartStore.cart = null
 
-    if (newUserId) {
-      await cartStore.getCart(newUserId)
+      if (newUserId) {
+        await cartStore.getCart(newUserId)
+      }
     }
-  })
+  )
 
   watch(
     () => userStore.user?.address,
@@ -41,25 +51,21 @@
     { immediate: true }
   )
 
-  const cart = computed(() => cartStore.cart?.products ?? [])
-
-  const subtotal = computed(() =>
-    cart.value.reduce((total, item) => total + item.price * item.quantity, 0).toFixed(2)
-  )
-
-  const removeItem = (id) => {
-    const updatedProducts = cart.value.filter(item => item.productId !== id)
-    cartStore.updateCart(cartStore.cart.id, { ...cartStore.cart, products: updatedProducts })
+  const removeItem = async (id) => {
+    const updatedProducts = cart.value.filter((item) => item.productId !== id)
+    await cartStore.updateCart(cartStore.cart.id, { ...cartStore.cart, products: updatedProducts })
   }
 
-  const updateItem = (index, updatedItem) => {
+  const updateItem = async (index, updatedItem) => {
     const updatedProducts = [...cart.value]
     updatedProducts[index] = { ...updatedProducts[index], ...updatedItem }
-    cartStore.updateCart(cartStore.cart.id, { ...cartStore.cart, products: updatedProducts })
+    await cartStore.updateCart(cartStore.cart.id, { ...cartStore.cart, products: updatedProducts })
   }
 
-  const clearCart = () => {
-    cartStore.deleteCart(cartStore.cart.id)
+  const clearCart = async () => {
+    if (cartStore.cart?.id) {
+      await cartStore.deleteCart(cartStore.cart.id)
+    }
   }
 </script>
 
@@ -91,7 +97,7 @@
 
       <div class="right">
         <div class="adress__block">
-          <div class="adress__input-label">SHIPPING ADRESS</div>
+          <div class="adress__input-label">SHIPPING ADDRESS</div>
           <CustomInput v-model="city" placeholder="City" :disabled="isDisabled" />
           <CustomInput v-model="street" placeholder="Street" :disabled="isDisabled" />
           <CustomInput v-model="zipcode" placeholder="Postcode / Zip" :disabled="isDisabled" />
@@ -101,7 +107,7 @@
         <div class="total__block">
           <div class="subtotal__text">SUB TOTAL&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${{ subtotal }}</div>
           <div class="total__text">GRAND TOTAL&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span>${{ subtotal }}</span></div>
-          <hr>
+          <hr />
           <CustomButton class="total__button">PROCEED TO CHECKOUT</CustomButton>
         </div>
       </div>

@@ -8,8 +8,8 @@ export const useProductStore = defineStore('product', () => {
     const product = ref(null)
 
     const getProduct = async (id) => {
-        const productResponse = await get(`/products/${id}`)
-        const p = productResponse.data
+        const res = await get(`/products/${id}`)
+        const p = res.data
 
         product.value = {
             id: p.id,
@@ -37,6 +37,6 @@ export const useProductStore = defineStore('product', () => {
     return {
         product,
         getProduct,
-        fetchProduct
+        fetchProduct,
     }
 })
