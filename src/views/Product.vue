@@ -1,12 +1,14 @@
 <script setup>
   import { ref, computed, onMounted, watch } from 'vue'
-  import { useRoute } from 'vue-router'
+  import { useRoute, useRouter } from 'vue-router'
   import { storeToRefs } from 'pinia'
   import { useWindowSize } from '@vueuse/core'
 
+  import { ROUTES } from "@/config/constants/routes.js"
   import { useCatalogStore } from '@/store/catalog.js'
   import { useProductStore } from '@/store/product.js'
   import { useCartStore } from '@/store/cart.js'
+  import { useUserStore } from '@/store/user.js'
 
   import SecondaryLayout from "@/layouts/Secondary.vue"
   import CustomSelect from "@/components/other/CustomSelect.vue"
@@ -22,10 +24,12 @@
 
   const { width } = useWindowSize()
   const route = useRoute()
+  const router = useRouter()
 
   const catalogStore = useCatalogStore()
   const productStore = useProductStore()
   const cartStore = useCartStore()
+  const userStore = useUserStore()
 
   const { getCatalog } = storeToRefs(catalogStore)
   const { product } = storeToRefs(productStore)
@@ -34,8 +38,11 @@
   const currentSlide = ref(0)
 
   const loadProduct = async (id) => {
-    await productStore.getProduct(id)
+    color.value = ''
+    size.value = ''
+    quantity.value = ''
 
+    await productStore.getProduct(id)
     const totalSlides = 3
     sliderImages.value = Array.from({ length: totalSlides }, () => product.value.image)
     currentSlide.value = 0
@@ -57,6 +64,11 @@
       return
     }
 
+    if (!userStore.selectedUserId) {
+      alert("Please select a user before adding to cart")
+      return
+    }
+
     const productToAdd = {
       productId: product.value.id,
       title: product.value.title,
@@ -67,7 +79,11 @@
       image: product.value.image,
     }
 
-    await cartStore.addToCart(productToAdd)
+    await cartStore.addToCart(productToAdd, userStore.selectedUserId)
+    router.push({ name: ROUTES.CART })
+    color.value = ''
+    size.value = ''
+    quantity.value = ''
   }
 
   const cardsPerPage = computed(() => (width.value < 1600 ? 2 : 3))
@@ -107,12 +123,30 @@
         <div class="product__price">${{ product.price }}</div>
 
         <div class="options">
-          <CustomSelect v-model="color" title="CHOOSE COLOR" :options="['Black', 'White']" :multiple="false" :showSelectedInTitle="true"/>
-          <CustomSelect v-model="size" title="CHOOSE SIZE" :options="['S', 'M', 'L']" :multiple="false" :showSelectedInTitle="true"/>
-          <CustomSelect v-model="quantity" title="QUANTITY" :options="['1', '2', '3']" :multiple="false" :showSelectedInTitle="true"/>
+          <CustomSelect
+            v-model="color"
+            title="CHOOSE COLOR"
+            :options="['Black', 'White', 'Red', 'Blue', 'Green', 'Yellow']"
+            :multiple="false"
+            :showSelectedInTitle="true"
+          />
+          <CustomSelect
+            v-model="size"
+            title="CHOOSE SIZE"
+            :options="['XS', 'S', 'M', 'L', 'XL', 'XXL']"
+            :multiple="false"
+            :showSelectedInTitle="true"
+          />
+          <CustomSelect
+            v-model="quantity"
+            title="QUANTITY"
+            :options="['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']"
+            :multiple="false"
+            :showSelectedInTitle="true"
+          />
         </div>
 
-        <button class="product__button" @click="addToCart" :disabled="!color || !size || !quantity" >
+        <button class="product__button" @click="addToCart" :disabled="!color || !size || !quantity">
           <img :src="cartIcon" alt="cart" width="26" /> Add to Cart
         </button>
       </div>

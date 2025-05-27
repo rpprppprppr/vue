@@ -1,8 +1,10 @@
 <script setup>
   import { onMounted } from 'vue'
   import { useUserStore } from '@/store/user.js'
+  import { useCartStore } from '@/store/cart.js'
 
   const userStore = useUserStore()
+  const cartStore = useCartStore()
 
   onMounted(() => {
     userStore.getAllUsers()
@@ -13,10 +15,12 @@
 
     if (value === 'new') {
       userStore.clearUser()
+      cartStore.cart = { id: null, userId: null, products: [] }
     } else {
       const id = parseInt(value)
       userStore.selectedUserId = id
       await userStore.getUser(id)
+      await cartStore.getCart(id)
     }
   }
 </script>

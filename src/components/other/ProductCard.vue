@@ -16,18 +16,16 @@
     <div class="product__image-wrapper">
       <img class="product__photo" :src="image" />
       <div class="product__overlay">
-        <button class="product__button">
+        <RouterLink :to="{ name: ROUTES.PRODUCT, params: { id } }" class="product__button">
           <img :src="cartIcon" alt="Корзина" width="26" /> Add to Cart
-        </button>
+        </RouterLink>
       </div>
     </div>
-    <RouterLink :to="{ name: ROUTES.PRODUCT, params: { id } }">
-      <div class="product__text">
-        <div class="product__title">{{ title }}</div>
-        <div class="product__description">{{ description }}</div>
-        <div class="product__price">${{ price }}</div>
-      </div>
-    </RouterLink>
+    <div class="product__text">
+      <div class="product__title">{{ title }}</div>
+      <div class="product__description">{{ description }}</div>
+      <div class="product__price">${{ price }}</div>
+    </div>
   </div>
 </template>
 

@@ -33,10 +33,10 @@
   watch(
     () => userStore.selectedUserId,
     async (newUserId) => {
-      cartStore.cart = null
-
       if (newUserId) {
         await cartStore.getCart(newUserId)
+      } else {
+        cartStore.cart = { id: null, userId: null, products: [] }
       }
     }
   )
