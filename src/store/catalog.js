@@ -24,8 +24,9 @@ export const useCatalogStore = defineStore('catalog', () => {
         return { min: Math.min(...prices), max: Math.max(...prices) }
     })
 
-    const readCatalog = async () => {
-        const response = await get('/products')
+    const readCatalog = async (limit) => {
+        const queryLimit = limit ? `?limit=${limit}` : ''
+        const response = await get(`/products${queryLimit}`)
         allProducts.value = response.data
 
         const bounds = priceBounds.value
