@@ -33,6 +33,7 @@
 <template>
   <DefaultLayout>
     <MainBanner />
+    {{ 123 }}
     <div class="offer">
       <OfferBlock v-for="(offer, index) in offers" :key="index" v-bind="offer"/>
     </div>

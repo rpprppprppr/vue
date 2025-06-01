@@ -1,0 +1,18 @@
+services:
+  nginx:
+    build:
+      context: .
+      dockerfile: deploy/nginx/Dockerfile
+      args:
+        BASE_API_URL: ${BASE_API_URL}
+    container_name: "itrwt-${ENV:-dev}"
+    restart: unless-stopped
+    environment:
+      - NGINX_PORT=80
+    networks:
+      - default
+
+
+networks:
+  default:
+    name: "itrwt-${ENV:-dev}"
