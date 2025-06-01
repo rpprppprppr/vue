@@ -10,11 +10,16 @@
   import OfferBlock from "@/components/other/OfferBlock.vue"
   import DefaultLayout from "@/layouts/Default.vue"
 
+  import offer1 from "@/assets/img/offer-1.png"
+  import offer2 from "@/assets/img/offer-2.png"
+  import offer3 from "@/assets/img/offer-3.png"
+  import offer4 from "@/assets/img/offer-4.png"
+
   const offers = [
-    { description: "30% OFF", category: "FOR WOMEN", image: "src/assets/img/offer/1.png" },
-    { description: "HOT DEAL", category: "FOR MEN", image: "src/assets/img/offer/2.png" },
-    { description: "NEW ARRIVALS", category: "FOR KIDS", image: "src/assets/img/offer/3.png" },
-    { description: "LUXURIOUS & TRENDY", category: "ACCESSORIES", image: "src/assets/img/offer/4.png" },
+    { description: "30% OFF", category: "FOR WOMEN", image: offer1 },
+    { description: "HOT DEAL", category: "FOR MEN", image: offer2 },
+    { description: "NEW ARRIVALS", category: "FOR KIDS", image: offer3 },
+    { description: "LUXURIOUS & TRENDY", category: "ACCESSORIES", image: offer4 },
   ]
 
   const catalogStore = useCatalogStore()
