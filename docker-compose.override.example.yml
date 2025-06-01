@@ -6,11 +6,9 @@ services:
       - "5173:5173"
     volumes:
       - .:/app
+      - /app/node_modules
     env_file:
       - .env
     environment:
       BASE_API_URL: ${BASE_API_URL:-/}
     command: "sh -c 'npm install && npm run dev'"
-
-volumes:
-  node_modules:
